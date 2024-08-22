@@ -1,14 +1,23 @@
 import java.util.*;
 
-public class ciframentodecesar{
-    public static void main (String Args[]){
+public class ciframentodecesar {
+    public static void main(String Args[]) {
         String frase;
-        frase = MyIO.readLine();
-        int ASCII =0;
-        for(int i=0;i<frase.length();i++){
-            ASCII = frase.chatAt(i) ;
-            ASCII += 3;
-            frase.chatAt(i) = ASCII;
+        while (true) {
+            frase = MyIO.readLine();
+            if (frase.equals("FIM")) {
+                break;
+            }
+            int tam = frase.length();
+            String temp = "";
+            int ASCII = 0;
+            
+            for (int i = 0; i < tam; i++) {
+                ASCII = frase.charAt(i);
+                ASCII += 3;
+                temp += (char) ASCII;
+            }
+            MyIO.println(temp);
         }
     }
 }

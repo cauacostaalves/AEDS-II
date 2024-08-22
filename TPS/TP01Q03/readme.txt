@@ -12,3 +12,6 @@ Crie um método iterativo que recebe uma string como parâmetro e
 retorna outra contendo a entrada de forma cifrada. Neste exercício, 
 suponha a chave de ciframento três. Na saída padrão, para cada linha 
 de entrada, escreva uma linha com a mensagem criptografada.
+
+
+
