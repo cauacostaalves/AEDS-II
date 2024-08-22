@@ -1,18 +1,17 @@
-import java.util.Scanner;
 
 public class parouimpar {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        
         int num = 0;
-        num = scanner.nextInt();
+        num = MyIO.readInt();
         while (num != 0) {
             if (num % 2 == 0) {
-                System.out.println("P");
+                MyIO.println("P");
             } else {
-                System.out.println("I");
+                MyIO.println("I");
             }
-            num = scanner.nextInt();
+            num = MyIO.readInt();
         }
-        scanner.close();
+       
     }
 }

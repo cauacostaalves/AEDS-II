@@ -1,4 +1,3 @@
-package Testes.java;
 
 import java.util.Scanner; // importa a biblioteca de scan
 import java.io.File;
