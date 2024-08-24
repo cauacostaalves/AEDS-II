@@ -18,12 +18,12 @@ public class Is {
         String vogais = "aeiouAEIOU";
         for (int i = 0; i < tam; i++) {
             char c = frase.charAt(i);
-            if (Character.isLetter(c)) {
+            if (Character.isLetter(c) == true) {
                 if (vogais.indexOf(c) != -1) {
                     return false;
-                } else {
-                    return false;
                 }
+            } else {
+                return false;
             }
         }
         return true;
@@ -40,16 +40,19 @@ public class Is {
         return true;
     }
 
-    // public static boolean IsReal(String frase){
-    // int tam = frase.length();
-    // for(int i=0;i<tam;i++){
-    // char c = frase.charAt(i);
-    // if( ){
-    // return false;
-    // }
-    // }
-    // return true;
-    // }
+    public static boolean IsReal(String frase) {
+        int tam = frase.length();
+        for (int i = 0; i < tam; i++) {
+            char c = frase.charAt(i);
+            if (!Character.isLetter(c)){
+                if(){
+                return false;
+                            }       
+                     }
+              }
+        return true;
+    }
+
     public static void main(String[] args) {
         String frase;
         while (true) {
@@ -71,6 +74,11 @@ public class Is {
                 MyIO.print("SIM ");
             } else {
                 MyIO.print("NAO ");
+            }
+            if (IsReal(frase)) {
+                MyIO.print("SIM");
+            } else {
+                MyIO.print("NAO");
             }
             MyIO.print("\n");
         }
