@@ -42,14 +42,18 @@ public class Is {
 
     public static boolean IsReal(String frase) {
         int tam = frase.length();
+        int erro = 0;
+
         for (int i = 0; i < tam; i++) {
-            char c = frase.charAt(i);
-            if (!Character.isLetter(c)){
-                if(){
-                return false;
-                            }       
-                     }
-              }
+                if ( frase.charAt(i) == '.' ||  frase.charAt(i) == ',') {
+                    erro++;
+                    if (erro > 1) {
+                        return false;
+                    } 
+                }else if ( frase.charAt(i) < '0' ||  frase.charAt(i)> '9') {
+                    return false;
+                }   
+        }
         return true;
     }
 
