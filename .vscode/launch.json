@@ -6,6 +6,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Arquivo",
+            "request": "launch",
+            "mainClass": "TPS.TP01Q08.Arquivo",
+            "projectName": "AEDS-II_643a5529"
+        },
+        {
+            "type": "java",
+            "name": "EscreverNumerosEmArquivo",
+            "request": "launch",
+            "mainClass": "TPS.TP01Q08.EscreverNumerosEmArquivo",
+            "projectName": "AEDS-II_643a5529"
+        },
+        {
+            "type": "java",
+            "name": "arquivo",
+            "request": "launch",
+            "mainClass": "TPS.TP01Q08.arquivo",
+            "projectName": "AEDS-II_643a5529"
+        },
+        {
+            "type": "java",
             "name": "AlgebraBoleana",
             "request": "launch",
             "mainClass": "AlgebraBoleana",
