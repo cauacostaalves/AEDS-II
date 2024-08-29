@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "arq",
+            "request": "launch",
+            "mainClass": "arq",
+            "projectName": "AEDS II_51e04940"
+        },
+        {
+            "type": "java",
             "name": "Arquivo",
             "request": "launch",
             "mainClass": "TPS.TP01Q08.Arquivo",

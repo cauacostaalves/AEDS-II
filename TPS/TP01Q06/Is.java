@@ -1,4 +1,3 @@
-import java.util.*;
 
 public class Is {
     public static boolean IsVogal(String frase) {

@@ -1,6 +1,4 @@
 
-import java.util.*;
-
 public class RecIs {
 
     public static boolean IsVogal(String frase, int tam, int i) {

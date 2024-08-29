@@ -1,4 +1,3 @@
-import java.util.Scanner;
 
 public class RecPalindromo {
   public static boolean ispalindromo(String frase, int i, int tam) {

@@ -1,26 +1,53 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main (){
-    FILE* arq = NULL;
-    arq = fopen("numeros.txt" , "w+");
-    int tam=0;
-    scanf("%d" , &tam);
-    float num = 0;
-    for(int i =0;i<tam;i++){
-        scanf("%f",&num );
-        fprintf(arq,"%f\n",num);
+int main() {
+    FILE *file;
+    int n;
+    
+
+    scanf("%d", &n);
+
+    // Abre o arquivo para escrita binária
+    file = fopen("arq.bin", "wb");
+    if (file == NULL) {
+        return 1;
     }
-    fseek(arq, 0, SEEK_SET);
-    float* numtotal = (float*)malloc(tam * sizeof(float));
-    for(int i = 0; i<tam ;i++ ){
-        fscanf(arq, "%f" , &numtotal[i]);
+
+    
+    for (int i = 0; i < n; i++) {
+        double num;
+        scanf("%lf", &num);
+        fwrite(&num, sizeof(double), 1, file); // variavel q recebe , tamanho dela , quantas delas , e pra onde vai
     }
-    for(int i=tam-1;i>=0;i--){
-        
-        printf("%g\n",numtotal[i]);
+    fclose(file);
+
+    // Abre o arquivo para leitura binária
+    file = fopen("arq.bin", "rb");
+    if (file == NULL) {
+        return 1;
     }
-    free(numtotal);
-    fclose(arq);
+
+    // Move o ponteiro para o final do arquivo
+    fseek(file, 0, SEEK_END); // move o ponteiro do arq pra onde eu quero 
+    long fileSize = ftell(file); // retorna a posiçao atual do ponteiro, ou seja, como eu movi para o final o ponteiro retorna a quantidade de bytes no arquivo 
+    long doubleSize = sizeof(double); // fala q o tamanho dos itens podem ser double 
+    long pointer = fileSize - doubleSize; // pega o tamanho do arquivo (fileSize) - o tamanho de um numero (double) = a posiaçao do ultimo valor 
+
+    // Lê e imprime os números doubles em ordem reversa
+    for (int i = 0; i < n; i++) {
+        fseek(file, pointer, SEEK_SET);  // Move o ponteiro para a posição desejada
+        double num;
+        fread(&num, sizeof(double), 1, file); // le um arq binario e faz o mesmo q o fwrite = variavel q recebe , tamanho dela , quantas delas , e pra onde vai
+
+        if (num == (int)num) {
+            printf("%d\n", (int)num);
+        } else {
+            printf("%g\n", num);
+        }
+        pointer -= doubleSize;  // Move o ponteiro para o número anterior
+    }
+
+    fclose(file);
     return 0;
 }
