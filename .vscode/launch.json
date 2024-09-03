@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "testeselecao",
+            "request": "launch",
+            "mainClass": "testeselecao",
+            "projectName": "AEDS II_51e04940"
+        },
+        {
+            "type": "java",
             "name": "arq",
             "request": "launch",
             "mainClass": "arq",
