@@ -25,7 +25,6 @@ class tecladoquebrado {
                     novotexto.append(temp);
             }
         }
-        
         return novotexto;
     } 
     public static void main(String[] args) throws IOException {
@@ -34,5 +33,4 @@ class tecladoquebrado {
         System.out.print(OrganizaString(texto));  
         sc.close();  
     }
- 
-}
+} 

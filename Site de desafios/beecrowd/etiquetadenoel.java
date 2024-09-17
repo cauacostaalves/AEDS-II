@@ -8,7 +8,6 @@ class etiquetadenoel {
         ArrayList<String> traducoes = new ArrayList<>(qtdIdiomas);
         
         for(int i =0;i<qtdIdiomas;i++){
-            
             String idioma = sc.nextLine();
             String traducao = sc.nextLine();
             idiomas.add(idioma);
