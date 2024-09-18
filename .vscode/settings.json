@@ -1,4 +1,7 @@
 {
     "C_Cpp.errorSquiggles": "enabled",
-    "C_Cpp.default.compilerPath": "d:\\AEDS II\\Testes\\c++\\array.cpp"
+    "C_Cpp.default.compilerPath": "d:\\AEDS II\\Testes\\c++\\array.cpp",
+    "files.associations": {
+        "random": "c"
+    }
 }
