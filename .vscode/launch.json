@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ordemlistanoel",
+            "request": "launch",
+            "mainClass": "ordemlistanoel",
+            "projectName": "AEDS-II_5af1839"
+        },
+        {
+            "type": "java",
             "name": "testeselecao",
             "request": "launch",
             "mainClass": "testeselecao",

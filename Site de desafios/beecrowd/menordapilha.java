@@ -72,5 +72,6 @@ public class menordapilha{
             
             acoes --;
         }
+        sc.close();
     }
 }

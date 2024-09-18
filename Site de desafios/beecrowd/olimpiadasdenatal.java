@@ -1,4 +1,4 @@
-import java.util.*;
+//import java.util.*;
 
 class Pais{
     String nome;
@@ -21,7 +21,7 @@ class Pais{
         }else if(this.bronze != comp.bronze){
             return comp.bronze - this.bronze;
         }else {
-            return this.nome.compareTo(outro.nome);
+            return this.nome.compareTo(comp.nome);
         }
     }
 
@@ -32,6 +32,6 @@ class Pais{
 
 public class olimpiadasdenatal {
     public static void main(String [] Args){
-        Pais [] quadrodemedalhas ;
+     //   Pais [] quadrodemedalhas ;
     }
 }
