@@ -57,7 +57,7 @@ class Pokemon{
 public class classeEmJava {
     public static void main(String[] Args){
         Scanner sc = new Scanner(System.in);
-
+        String csvFile = "pokemon.csv";
         sc.close();
     }
 }
