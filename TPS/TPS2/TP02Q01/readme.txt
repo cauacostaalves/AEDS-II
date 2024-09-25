@@ -10,7 +10,7 @@ de um registro. Atenção para o arquivo de entrada, pois em alguns registros fa
  indicando o id do Pokémon a ser lido.
 
 A última linha da entrada contém a palavra FIM. A saída padrão também contém várias linhas, uma para cada registro
-contido em uma linha da entrada padrão, no seguinte formato: 
+ contido em uma linha da entrada padrão, no seguinte formato: 
 [#id -> name: description - [types] - [abilities] - weight - height - captureRate - isLegendary - generation] - captureDate].
 
 Exemplo: [#181 -> Ampharos: Light Pokémon - ['electric'] - ['Static', 'Plus'] - 61.5kg - 1.4m - 45% - false - 2 gen] - 25/05/1999

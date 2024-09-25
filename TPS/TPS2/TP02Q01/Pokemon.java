@@ -1,7 +1,5 @@
-package TPS.TPS2.TP02Q01;
-import java.util.*;
 
-public class Pokemon{
+class Pokemon{
     private int id;
     private int generation;
     private String name;
@@ -94,6 +92,10 @@ public class Pokemon{
         clonado.captureDate = this.captureDate != null ? (Date) this.captureDate.clone() : null; 
             
         return clonado;
+    }
+
+    public void lerPokemon(){
+
     }
 
     public void imprimirPokemon(){
