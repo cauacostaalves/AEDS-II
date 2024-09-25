@@ -29,7 +29,7 @@ class Pokemon{
         this.weight = 0.0;
         this.height = 0.0;
         this.captureRate = 0;
-        this.isLegendary = false;
+        this.isLegendary = true;
         this.captureDate = null;
     }
 
@@ -127,7 +127,11 @@ class Pokemon{
                 height = Double.parseDouble(temp[8]);
             }
             int captureRat = Integer.parseInt(temp[9]);
-            boolean isLegendary = Boolean.parseBoolean(temp[10]); 
+            if(temp[10].equals("1")){
+                isLegendary = true;
+            }else{
+                isLegendary = false;
+            }
             LocalDate captureDate = LocalDate.parse(temp[11], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             Pokemon PokeTemp = new Pokemon(id, generation , name , description , types , abilities , weight , height , captureRat, isLegendary ,captureDate); 
             Pokedex.add(PokeTemp);
@@ -155,11 +159,10 @@ class Pokemon{
     }
 }
 
-
 class classeEmJava {
     
     public static ArrayList<String> LerCSV(){
-        String csvFile = "/temp/pokemon.csv";
+        String csvFile = "/tmp/pokemon.csv";
         ArrayList<String> TextoCSV = new ArrayList<>();
         try{
             BufferedReader br = new BufferedReader(new FileReader(csvFile));
