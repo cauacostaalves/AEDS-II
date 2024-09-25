@@ -1,63 +1,31 @@
+package TPS.TPS2.TP02Q01;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.*;
 
-class Pokemon{
-    private int id;
-    private int generation;
-    private String name;
-    private String description;
-    private String[] types;
-    private String[] abilities;
-    private double weight;
-    private double height;
-    private int captureRate;
-    private boolean isLegendary;
-    private Date captureDate;
-
-    public Pokemon(){
-    }
-
-    public Pokemon(int id , int generation){
-        this.id = id;
-        this.generation = generation;
-    }
-
-    public void imprimir(){
-       // imprimir a lista inteira? ou um selecionado
-    }
-
-    public void ler(){
-        // pegar o csv
-    }
-
-    public int getId(){
-        return id;
-    }
-
-    public void setId(int id){
-        this.id = id;
-    }
-
-    public int getGeneration(){
-        return generation;
-    }
-
-    public void setGeneration(int generation){
-        this.generation = generation;
-    }
-
-    public String getName(){
-        return name;
-    }
-
-    public void setName(String name){
-        this.name = name;
-    }
-    // public void clone(){ oq fazer?}
-}
 public class classeEmJava {
+    
+    public static void LerCSV(){
+        String csvFile = "pokemon.csv";
+        try{
+            BufferedReader br = new BufferedReader(csvFile);
+            br.readLine();
+            String LinhaCSV;
+            while((LinhaCSV = br.readLine()) != null ){
+                LinhaCSV;
+            }
+        }catch(Exception e){e.printStackTrace();}
+    }
+
     public static void main(String[] Args){
         Scanner sc = new Scanner(System.in);
-        String csvFile = "pokemon.csv";
+        Pokemon[] Pokedex = new Pokemon[801];
+        while(true){
+            String idPokemon = sc.next();
+            if(idPokemon.equals("FIM")){
+            break;
+            }
+        }
         sc.close();
     }
 }
