@@ -3,7 +3,7 @@ import java.io.FileReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.time.format.DateTimeParseException;
+import java.util.stream.Collectors;
 
 class Pokemon{
 
@@ -103,7 +103,7 @@ class Pokemon{
 
     public ArrayList<Pokemon> lerPokemon(ArrayList<String> Pokes){
         int idPoke = 0;
-        ArrayList<Pokemon> pokedez = new ArrayList<>();
+        ArrayList<Pokemon> Pokedex = new ArrayList<>();
         while(idPoke < Pokes.size()){
             String pokemon = Pokes.get(idPoke);
             String [] temp = pokemon.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");  
@@ -118,21 +118,40 @@ class Pokemon{
             }
             ArrayList<String> abilities = new ArrayList<>();
             abilities.add(temp[6]);
-            double weight = Double.parseDouble(temp[7]);
-            double height = Double.parseDouble(temp[8]);
+            double weight = 0.0;
+            if(!temp[7].isEmpty()){
+                weight = Double.parseDouble(temp[7]);
+            }
+            double height = 0.0;
+            if(!temp[8].isEmpty()){
+                height = Double.parseDouble(temp[8]);
+            }
             int captureRat = Integer.parseInt(temp[9]);
             boolean isLegendary = Boolean.parseBoolean(temp[10]); 
             LocalDate captureDate = LocalDate.parse(temp[11], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             Pokemon PokeTemp = new Pokemon(id, generation , name , description , types , abilities , weight , height , captureRat, isLegendary ,captureDate); 
-            pokedez.add(PokeTemp);
+            Pokedex.add(PokeTemp);
             idPoke++;
         }
-        return pokedez;
+        return Pokedex;
     }
 
     public void imprimirPokemon(){
-        System.out.println("[#" + id + " -> " + name + ": " + description + " - " + types + abilities + " - " 
-        + weight + " - " + height + " - " + captureRate + "% - " + generation + " gen]" + " - " + captureDate);
+        String FormatedTypes= types.stream().map(type -> "'" + type + "'") .collect(Collectors.joining(", "));
+
+        String FormatedAbilities = abilities.toString();
+
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        String formattedDate = captureDate.format(dateFormatter);
+
+        FormatedAbilities = FormatedAbilities.replace("[\"", "").replace("]\"", "");
+        //System.out.println(FormatedAbilities);
+
+        System.out.println("[#" + id + " -> " + name + ": " + description + " - [" 
+            + FormatedTypes + "] - " + FormatedAbilities + " - " 
+            + weight + "kg - " + height + "m - " + captureRate + "% - " 
+            + isLegendary + " - " + generation + " gen] - " + formattedDate);
     }
 }
 
@@ -140,7 +159,7 @@ class Pokemon{
 class classeEmJava {
     
     public static ArrayList<String> LerCSV(){
-        String csvFile = "pokemon.csv";
+        String csvFile = "/temp/pokemon.csv";
         ArrayList<String> TextoCSV = new ArrayList<>();
         try{
             BufferedReader br = new BufferedReader(new FileReader(csvFile));
@@ -159,23 +178,17 @@ class classeEmJava {
 
         //Lendo o arquivo csv e guardando em um array list 
         ArrayList<String> Pokes = LerCSV();
-        
-        // criando um espaço livre para os 801 pokemons
-        Pokemon [] Pokedex = new Pokemon[801];
-
-        //tratando a leitura csv dos pokemons 
-        for(int i =0;i<801;i++){
-        Pokedex[i].lerPokemon(Pokes);
-        }
+        ArrayList<Pokemon> Pokedex = new ArrayList<>();
+        Pokemon ler = new Pokemon();
+        Pokedex = ler.lerPokemon(Pokes);
 
         while(true){
             String idPokemon = sc.next();
             if(idPokemon.equals("FIM")){
             break;
             }
-            for(int i =0;i<801;i++){
-                Pokedex[i].lerPokemon(Pokes);
-                }
+            int idPok = Integer.parseInt(idPokemon);
+            Pokedex.get(idPok-1).imprimirPokemon();
         }
         sc.close();
     }
