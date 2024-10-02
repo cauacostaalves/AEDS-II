@@ -159,7 +159,7 @@ class Pokemon{
     }
 }
 
-class classeEmJava {
+class PesquisaSequencial {
     
     public static ArrayList<String> LerCSV(){
         String csvFile = "pokemon.csv";
@@ -176,6 +176,7 @@ class classeEmJava {
         return TextoCSV;
     }
 
+
     public static void main(String[] Args){
         Scanner sc = new Scanner(System.in);
 
@@ -184,15 +185,37 @@ class classeEmJava {
         ArrayList<Pokemon> Pokedex = new ArrayList<>();
         Pokemon ler = new Pokemon();
         Pokedex = ler.lerPokemon(Pokes);
+        List<Integer> Pokemons = new ArrayList<>();
 
-        while(true){
+        while(true){ // criando a lista de numeros desordenada
             String idPokemon = sc.next();
             if(idPokemon.equals("FIM")){
             break;
             }
             int idPok = Integer.parseInt(idPokemon);
-            Pokedex.get(idPok-1).imprimirPokemon();
+            Pokemons.add(idPok);
         }
+
+        ArrayList<Pokemon> NewPokedex = new ArrayList<>();
+        for (int id : Pokemons) {
+            for (Pokemon poke : Pokedex) {
+                if (poke.getId() == id) {
+                    NewPokedex.add(poke.Pokemonclone());
+                    break; 
+                }
+            }
+        }
+        
+        List<String> NomePokes = new ArrayList<>();
+
+        while(true){
+            String NomePoke = sc.next();
+            if(NomePoke.equals("FIM")){
+                break;
+            }
+            NomePokes.add(NomePoke);
+        }
+
         sc.close();
     }
 }
