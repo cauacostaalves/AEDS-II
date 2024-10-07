@@ -161,7 +161,7 @@ class Pokemon{
     }
 }
 
-class OrdenacaoSelecao {
+class OrdenacaoInsercao {
     
     public static ArrayList<String> LerCSV(){
         String csvFile = "/tmp/pokemon.csv";
@@ -178,12 +178,11 @@ class OrdenacaoSelecao {
         return TextoCSV;
     }
 
-    public static ArrayList<Pokemon> OrdenaSelecao(ArrayList<Pokemon> NewPokedex){
+    public static ArrayList<Pokemon> OrdenaInsercao(ArrayList<Pokemon> NewPokedex){
 
         int tam = NewPokedex.size();
         int comp =0;
         int mov=0;
-
         long startTime = System.nanoTime();
 
         for(int i =0;i<tam-1;i++){
@@ -249,7 +248,7 @@ class OrdenacaoSelecao {
             }
         }
 
-        OrdenaSelecao(NewPokedex);
+        OrdenaInsercao(NewPokedex);
 
         for(Pokemon p:NewPokedex){
             p.imprimirPokemon();
