@@ -164,7 +164,7 @@ class Pokemon{
 class OrdenacaoInsercao {
     
     public static ArrayList<String> LerCSV(){
-        String csvFile = "/tmp/pokemon.csv";
+        String csvFile = "pokemon.csv";
         ArrayList<String> TextoCSV = new ArrayList<>();
         try{
             BufferedReader br = new BufferedReader(new FileReader(csvFile));
@@ -185,23 +185,19 @@ class OrdenacaoInsercao {
         int mov=0;
         long startTime = System.nanoTime();
 
-        for(int i =0;i<tam-1;i++){
-            int menor =i;
-            for(int j=i+1;j<tam;j++){
-                String name1 = NewPokedex.get(menor).getName();
-                String name2 = NewPokedex.get(j).getName();
-                comp++;
-                if(name2.compareTo(name1) < 0){
-                    menor = j;
-                }
+        for(int i =1; i<tam; i++){
+            int j = i-1;
+
+            LocalDate temp = NewPokedex.get(i).getCaptureDate();
+
+            while( j >=0 && temp.isBefore(NewPokedex.get(j).getCaptureDate())){
+                comp +=2;
+                NewPokedex.set(j+1, NewPokedex.get(j));
+                mov++;
+                j--;
             }
-            comp++;
-            if(i != menor){
-                Pokemon temp = NewPokedex.get(i);
-                NewPokedex.set(i, NewPokedex.get(menor));
-                NewPokedex.set(menor, temp);
-                mov+=3;
-                }
+            NewPokedex.set(j+1,NewPokedex.get(i));
+            mov++;
         }
         
         long endTime = System.nanoTime();
