@@ -1,111 +1,211 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <time.h>
+#include <stdlib.h>
 
-#define MAX_TYPES 2
-#define MAX_ABILITIES 1
-#define MAX_NAME_LENGTH 40
-#define MAX_DESCRIPTION_LENGTH 100
-#define MAX_POKEMON 802
-
-typedef struct {
+// Atributos de um pokemon
+typedef struct
+{
     int id;
     int generation;
-    char name[MAX_NAME_LENGTH];
-    char description[MAX_DESCRIPTION_LENGTH];
-    char types[MAX_TYPES][20]; // Supondo um máximo de 2 tipos
-    char abilities[MAX_ABILITIES][20]; // Supondo um máximo de 1 habilidade
+    char name[80];
+    char description[80];
+    char type1[80];
+    char type2[80];
+    char abilities[200];
     double weight;
     double height;
     int captureRate;
     bool isLegendary;
-    struct tm captureDate; // Usando struct tm para data
+    char captureDate[12];
 } Pokemon;
 
-void imprimirPokemon(Pokemon *poke) {
-    char dateStr[11];
-    strftime(dateStr, sizeof(dateStr), "%d/%m/%Y", &poke->captureDate);
+// Declaração das funções
+void printPokemon(const Pokemon *pokemon);
+char *strsep(char **stringp, const char *delim);
+void formatarString(char *str);
+void adicionarPokemon(char *linha, Pokemon *pokemon);
+void lerArquivo(const char *nomeArquivo, Pokemon pokemons[], int *totalPokemons);
+int buscarPokemonID(int id, Pokemon pokemons[], int totalPokemons);
 
-    printf("[#%d -> %s: %s - [", poke->id, poke->name, poke->description);
-    for (int i = 0; i < MAX_TYPES; i++) {
-        if (strlen(poke->types[i]) > 0) {
-            printf("'%s'", poke->types[i]);
-            if (i < MAX_TYPES - 1 && strlen(poke->types[i + 1]) > 0) {
-                printf(", ");
-            }
-        }
+// Printar um pokemon em tal formato
+void printPokemon(const Pokemon *pokemon)
+{
+    printf("[#%d -> %s: %s - ['%s'", 
+           pokemon->id, 
+           pokemon->name, 
+           pokemon->description, 
+           pokemon->type1);
+    
+    if (strcmp(pokemon->type2, "") != 0)
+    {
+        printf(", '%s']", pokemon->type2);
+    } else
+    {
+        printf("]");
     }
-    printf("] - [%s] - %.2f kg - %.2f m - %d%% - %s - %d gen] - %s\n",
-           poke->abilities[0],
-           poke->weight,
-           poke->height,
-           poke->captureRate,
-           poke->isLegendary ? "true" : "false",
-           poke->generation,
-           dateStr);
+
+    printf(" - %s - %.1fkg - %.1fm - %d%% - %s - %d gen] - %s", 
+           pokemon->abilities, 
+           pokemon->weight, 
+           pokemon->height, 
+           pokemon->captureRate, 
+           pokemon->isLegendary ? "true" : "false", 
+           pokemon->generation, 
+           pokemon->captureDate);
 }
 
-int lerPokemon(FILE *file, Pokemon *pokedex, int max_pokemon) {
-    char line[256];
-    int count = 0;
+// Função manual para strsep
+char *strsep(char **stringp, const char *delim)
+{
+    char *start = *stringp;
+    char *p;
 
-    while (count < max_pokemon && fgets(line, sizeof(line), file)) {
-        Pokemon poke;
-        char types[MAX_TYPES][20] = {0};
-        char abilities[MAX_ABILITIES][20] = {0};
-        int isLegendaryTemp; // Variável temporária para isLegendary
-
-        sscanf(line, "%d,%d,%39[^,],%99[^,],%19[^,],%19[^,],%19[^,],%lf,%lf,%d,%d,%d/%d/%d",
-               &poke.id, &poke.generation, poke.name, poke.description,
-               types[0], types[1], abilities[0],
-               &poke.weight, &poke.height, &poke.captureRate,
-               &isLegendaryTemp, // Agora usando a variável temporária
-               &poke.captureDate.tm_mday, &poke.captureDate.tm_mon, &poke.captureDate.tm_year);
-
-        // Ajustar a data (tm_year é a partir de 1900)
-        poke.captureDate.tm_year -= 1900;
-        poke.captureDate.tm_mon -= 1;
-
-        // Copiar tipos e habilidades
-        strcpy(poke.types[0], types[0]);
-        if (strlen(types[1]) > 0) {
-            strcpy(poke.types[1], types[1]);
-        }
-        strcpy(poke.abilities[0], abilities[0]);
-
-        // Atribuir o valor a isLegendary
-        poke.isLegendary = (isLegendaryTemp == 1);
-
-        pokedex[count++] = poke;
+    if (start == NULL)
+    {
+        return NULL;
     }
-    return count;
+
+    p = strpbrk(start, delim);
+    if (p)
+    {
+        *p = '\0';
+        *stringp = p + 1;
+    }
+    else
+    {
+        *stringp = NULL;
+    }
+
+    return start;
 }
 
-int main() {
-    FILE *file = fopen("/tmp/pokemon.csv", "r");
-    if (!file) {
-        perror("Failed to open file");
-        return EXIT_FAILURE;
+// Retirar as " da string e substituir todas as , foras de [ ] por ; 
+void formatarString(char *str)
+{
+    int dentroColchetes = 0;  
+    int j = 0;  
+
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        if (str[i] == '[')
+        {
+            dentroColchetes = 1;  
+        } else if (str[i] == ']')
+        {
+            dentroColchetes = 0; 
+        }
+
+        if (str[i] == ',' && dentroColchetes == 0)
+        {
+            str[j++] = ';';
+        }
+        else if (str[i] != '"')
+        {
+            str[j++] = str[i];
+        }
     }
 
-    Pokemon pokedex[MAX_POKEMON];
-    int numPokemon = lerPokemon(file, pokedex, MAX_POKEMON);
-    fclose(file);
+    str[j] = '\0'; 
+}
 
-    char idPokemon[4];
-    while (true) {
-        scanf("%s", idPokemon);
-        if (strcmp(idPokemon, "FIM") == 0) {
+// Adicionar um pokemon ao array
+void adicionarPokemon(char *linha, Pokemon *pokemon)
+{
+    char *token;
+    token = strsep(&linha, ";");
+    pokemon->id = atoi(token);
+
+    token = strsep(&linha, ";");
+    pokemon->generation = atoi(token);
+
+    token = strsep(&linha, ";");
+    strcpy(pokemon->name, token);
+
+    token = strsep(&linha, ";");
+    strcpy(pokemon->description, token);
+
+    token = strsep(&linha, ";");
+    strcpy(pokemon->type1, token);
+
+    token = strsep(&linha, ";");
+    if (token[0] != 0) strcpy(pokemon->type2, token);
+
+    token = strsep(&linha, ";");
+    strcpy(pokemon->abilities, token);
+
+    token = strsep(&linha, ";");
+    pokemon->weight = atof(token);  
+
+    token = strsep(&linha, ";");
+    pokemon->height = atof(token);
+
+    token = strsep(&linha, ";");
+    pokemon->captureRate = atoi(token);
+
+    token = strsep(&linha, ";");
+    pokemon->isLegendary = atoi(token);  
+
+    token = strsep(&linha, ";");
+    strcpy(pokemon->captureDate, token);
+}
+
+// Ler o CSV linha por linha e ir setando os pokemons
+void lerArquivo(const char *nomeArquivo, Pokemon pokemons[], int *totalPokemons)
+{
+    FILE *arquivo = fopen(nomeArquivo, "r");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo %s\n", nomeArquivo);
+        return;
+    }
+
+    char linha[512];
+    *totalPokemons = 0;
+
+    while (fgets(linha, sizeof(linha), arquivo))
+    {
+        formatarString(linha);  
+        adicionarPokemon(linha, &pokemons[*totalPokemons]);
+        (*totalPokemons)++;
+    }
+
+    fclose(arquivo);
+}
+
+// Retornar o indice de um pokemon buscado por ID
+int buscarPokemonID(int id, Pokemon pokemons[], int totalPokemons)
+{
+    for (int i = 0; i < totalPokemons; i++)
+    {
+        if (pokemons[i].id == id)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+int main(void)
+{
+    Pokemon pokemons[1000];
+    int totalPokemons;
+
+    lerArquivo("/tmp/pokemon.csv", pokemons, &totalPokemons);
+
+    char input[10];
+    while (true)
+    {
+        scanf(" %s", input);
+
+        if (strcmp(input, "FIM") == 0)
+        {
             break;
         }
-        int idPok = atoi(idPokemon);
-        if (idPok > 0 && idPok <= numPokemon) {
-            imprimirPokemon(&pokedex[idPok ]);
-        } else {
-            printf("Pokémon não encontrado!\n");
-        }
+
+        int id = atoi(input);
+        int index = buscarPokemonID(id, pokemons, totalPokemons);
+        if (index != -1) printPokemon(&pokemons[index]);
     }
 
     return 0;

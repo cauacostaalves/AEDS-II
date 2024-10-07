@@ -162,7 +162,7 @@ class Pokemon{
 class classeEmJava {
     
     public static ArrayList<String> LerCSV(){
-        String csvFile = "/tmp/pokemon.csv";
+        String csvFile = "pokemon.csv";
         ArrayList<String> TextoCSV = new ArrayList<>();
         try{
             BufferedReader br = new BufferedReader(new FileReader(csvFile));
