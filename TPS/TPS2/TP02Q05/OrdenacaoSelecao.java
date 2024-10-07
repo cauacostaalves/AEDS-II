@@ -158,10 +158,10 @@ class Pokemon{
     }
 }
 
-class PesquisaSequencial {
+class OrdenacaoSelecao {
     
     public static ArrayList<String> LerCSV(){
-        String csvFile = "/tmp/pokemon.csv";
+        String csvFile = "pokemon.csv";
         ArrayList<String> TextoCSV = new ArrayList<>();
         try{
             BufferedReader br = new BufferedReader(new FileReader(csvFile));
@@ -175,7 +175,29 @@ class PesquisaSequencial {
         return TextoCSV;
     }
 
+    public static ArrayList<Pokemon> OrdenacaoSelecao(ArrayList<Pokemon> NewPokedex){
+        int tam = NewPokedex.size();
 
+        for(int i =0;i<tam-1;i++){
+            int menor =i;
+            for(int j=i+1;j<tam;j++){
+                String name1 = NewPokedex.get(menor).getName();
+                String name2 = NewPokedex.get(j).getName();
+
+                if(name2.compareTo(name1) < 0){
+                    menor = j;
+                }
+            }
+            if(i != menor){
+                Pokemon temp = NewPokedex.get(i);
+                NewPokedex.set(i, NewPokedex.get(menor));
+                NewPokedex.set(menor, temp);
+                }
+        }
+        return NewPokedex;
+    }
+
+    
     public static void main(String[] Args){
         Scanner sc = new Scanner(System.in);
 
@@ -184,42 +206,30 @@ class PesquisaSequencial {
         Pokemon ler = new Pokemon();
         Pokedex = ler.lerPokemon(Pokes);
 
-        List<Integer> Pokemons = new ArrayList<>();
-        while(true){ 
+        List<Integer> IDS = new ArrayList<>();
+        while(true){
             String idPokemon = sc.next();
             if(idPokemon.equals("FIM")){
             break;
             }
             int idPok = Integer.parseInt(idPokemon);
-            Pokemons.add(idPok);
+            IDS.add(idPok);
         }
-        
-        List<String> NomePokes = new ArrayList<>();
-        while(true){
-            String NomePoke = sc.next();
-            if(NomePoke.equals("FIM")){
-                break;
-            }
-            NomePokes.add(NomePoke);
-        }
-        
 
-        for(String n: NomePokes){
-            boolean achou =false;
-            for(Pokemon p: Pokedex){
-                if(p.getName().equals(n)){
-                        for(int i:Pokemons){
-                            if(p.getId() == i){
-                                achou = true;
-                            }
-                        }
+        ArrayList<Pokemon> NewPokedex = new ArrayList<>();
+
+        for(int id: IDS){
+            for(Pokemon p:Pokedex){
+                if(p.getId() == id){
+                    NewPokedex.add(p.Pokemonclone());
                 }
             }
-            if(achou == true){
-                 System.out.println("SIM");
-            }else{
-                System.out.println("NAO");
-            }
+        }
+
+        OrdenacaoSelecao(NewPokedex);
+
+        for(Pokemon p:NewPokedex){
+            p.imprimirPokemon();
         }
 
         sc.close();
