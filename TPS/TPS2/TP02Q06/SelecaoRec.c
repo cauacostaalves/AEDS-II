@@ -186,39 +186,20 @@ int buscarPokemonID(int id, Pokemon pokemons[], int totalPokemons)
     return -1;
 }
 
-void Selecao(Pokemon pokes[801], int tam){
-    for(int i=0;i<tam;i++){
-        for(int j=0;j<tam-1;j++){
-            if(strcmp(pokes[i].name,pokes[j].name) < 0){
-                Pokemon temp = pokes[i];
+void Selecao(Pokemon pokes[801], int tam ,int i,int j){
+    if(i >= tam){
+        return;
+    }
+    if(j < tam-1){
+        if(strcmp(pokes[i].name,pokes[j].name) < 0){
+             Pokemon temp = pokes[i];
                 pokes[i] = pokes[j];
                 pokes[j] = temp;
-            }
         }
+        Selecao(pokes,tam,i,++j);
+    }else{
+        Selecao(pokes,tam,++i,0);
     }
-}
-
-bool BuscaBinaria(Pokemon poke[801], char input[15],int tam){
-    int esq = 0;
-    int dir = tam-1;
-    
-    while(esq <= dir){
-        int meio = (esq + dir )/2;
-
-        if(strcmp(input,poke[meio].name) == 0){
-            return true;
-        }
-
-        if(strcmp(input,poke[meio].name) > 0 ){
-            esq = meio+1;
-        }
-
-        if(strcmp(input,poke[meio].name) < 0 ){
-            dir = meio-1;
-        }
-
-    }
-    return false;
 }
 
 int main(void)
@@ -245,28 +226,12 @@ int main(void)
         NewPokemons[i++] = pokemons[id];
 
     }
-    Selecao(NewPokemons , i);
-    
- 
 
-    while (true)
-    {
-        scanf(" %s", input);
-        
-        if (strcmp(input, "FIM") == 0)
-        {
-            break;
-        }
+    Selecao(NewPokemons,i,0,0);
 
-        bool sim = false;
-        sim = BuscaBinaria(NewPokemons,input,i);
-        if(sim){
-            printf("SIM\n");
-        }else{
-            printf("NAO\n");
-        }
+    for(int j =0;j<i;j++){
+        printPokemon(&NewPokemons[j]);
     }
-  
-        
+    
     return 0;
 }

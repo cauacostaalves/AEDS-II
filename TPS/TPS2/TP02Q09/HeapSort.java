@@ -162,10 +162,10 @@ class Pokemon{
     }
 }
 
-class OrdenacaoInsercao {
+class HeapSort {
     
     public static ArrayList<String> LerCSV(){
-        String csvFile = "/tmp/pokemon.csv";
+        String csvFile = "pokemon.csv";
         ArrayList<String> TextoCSV = new ArrayList<>();
         try{
             BufferedReader br = new BufferedReader(new FileReader(csvFile));
@@ -188,28 +188,13 @@ class OrdenacaoInsercao {
         }
     }
 
-    public static ArrayList<Pokemon> OrdenaInsercao(ArrayList<Pokemon> NewPokedex){
+    public static ArrayList<Pokemon> OrdenaHeapSort(ArrayList<Pokemon> NewPokedex){
 
         int tam = NewPokedex.size();
         int comp =0;
         int mov=0;
         long startTime = System.nanoTime();
 
-        for(int i =1; i<tam; i++){
-            int j = i-1;
-
-            LocalDate DateTemp = NewPokedex.get(i).getCaptureDate();
-            Pokemon temp = NewPokedex.get(i);
-            
-            while( j >= 0 && DateTemp.isBefore(NewPokedex.get(j).getCaptureDate())){
-                comp +=2;
-                NewPokedex.set(j+1, NewPokedex.get(j));
-                mov++;
-                j--;
-            }
-            NewPokedex.set(j+1,temp);
-            mov++;
-        }
         
         long endTime = System.nanoTime();
         long duration = endTime - startTime;
@@ -248,7 +233,7 @@ class OrdenacaoInsercao {
             }
         }
 
-        OrdenaInsercao(NewPokedex);
+        OrdenaHeapSort(NewPokedex);
 
         for(Pokemon p:NewPokedex){
             p.imprimirPokemon();
