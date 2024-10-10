@@ -1,8 +1,3 @@
-package TPS.TPS2.TP02Q13;
-
-public class MergeSort {
-    
-}
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -167,7 +162,7 @@ class Pokemon{
     }
 }
 
-class CoutingSort {
+class MergeSort {
     
     public static ArrayList<String> LerCSV(){
         String csvFile = "/tmp/pokemon.csv";
@@ -186,51 +181,63 @@ class CoutingSort {
 
     public static void matricula(int mov, int comp, double tempo){
         String conteudo = "855926" + "\t" + comp + "\t" + mov + "\t" + tempo;
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_coutingsort.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("855926_mergesort.txt"))) {
             writer.write(conteudo);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static ArrayList<Pokemon> OrdenaCoutingSort(ArrayList<Pokemon> newPokedex) {
-        int tam = newPokedex.size();
-        int maxCaptureRate = newPokedex.stream().mapToInt(Pokemon::getCaptureRate).max().orElse(0);
-        int[] count = new int[maxCaptureRate + 1];
-        ArrayList<Pokemon> sortedPokedex = new ArrayList<>(Collections.nCopies(tam, null));
-    
-        for (Pokemon pokemon : newPokedex) {
-            count[pokemon.getCaptureRate()]++;
-        }
-
-        for (int i = 1; i <= maxCaptureRate; i++) {
-            count[i] += count[i - 1];
-        }
-    
-        for (int i = tam - 1; i >= 0; i--) {
-            Pokemon pokemon = newPokedex.get(i);
-            sortedPokedex.set(count[pokemon.getCaptureRate()] - 1, pokemon);
-            count[pokemon.getCaptureRate()]--;
-        }
-    
-        ArrayList<Pokemon> finalSortedPokedex = new ArrayList<>();
+    public static ArrayList<Pokemon> OrdenaMergeSort(ArrayList<Pokemon> newPokedex) {
+            int tamanho = newPokedex.size();
+            int elementos = 1; 
+            int inicio, meio, fim;
         
-        for (int i = 0; i <= maxCaptureRate; i++) {
-            ArrayList<Pokemon> tempList = new ArrayList<>();
-            for (Pokemon pokemon : sortedPokedex) {
-                if (pokemon != null && pokemon.getCaptureRate() == i) {
-                    tempList.add(pokemon);
+            while (elementos < tamanho) {
+                inicio = 0;
+                
+                while (inicio + elementos < tamanho) {
+                    meio = inicio + elementos;
+                    fim = inicio + 2 * elementos;
+        
+                    if (fim > tamanho) {
+                        fim = tamanho;
+                    }
+        
+                    intercala(newPokedex, inicio, meio, fim);
+                    inicio = fim;
+                }
+        
+                elementos *= 2;
+            }
+        }
+        
+        public static ArrayList<Pokemon>  intercala(ArrayList<Pokemon> newPokedex, int inicio, int meio, int fim) {
+            int[] temp = new int[fim - inicio]; 
+            ArrayList<Pokemon>
+            int i = inicio; 
+            int j = meio;   
+            int k = 0;      
+        
+            while (i < meio && j < fim) {
+                if (newPokedex.get(i).getTypes() <= newPokedex.get(j).getTypes()) {
+                    temp[k++] = vetor[i++];
+                } else {
+                    temp[k++] = vetor[j++];
                 }
             }
-
-            tempList.sort(Comparator.comparing(Pokemon::getName));
-            finalSortedPokedex.addAll(tempList);
+        
+            while (i < meio) {
+                temp[k++] = vetor[i++];
+            }
+        
+            while (j < fim) {
+                temp[k++] = vetor[j++];
+            }
+        
+            System.arraycopy(temp, 0, vetor, inicio, temp.length);
         }
     
-        return finalSortedPokedex;
-    }
-    
-
     
     public static void main(String[] Args){
         Scanner sc = new Scanner(System.in);
@@ -260,7 +267,7 @@ class CoutingSort {
             }
         }
 
-        OrdenaCoutingSort(NewPokedex);
+        OrdenaMergeSort(NewPokedex);
 
         for(Pokemon p:NewPokedex){
             p.imprimirPokemon();
