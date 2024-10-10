@@ -186,6 +186,7 @@ int buscarPokemonID(int id, Pokemon pokemons[], int totalPokemons)
     return -1;
 }
 
+<<<<<<< Updated upstream
 void quickSort(Pokemon pokes[801], int left, int right) {
     int i = left;
     int j = right;
@@ -206,10 +207,26 @@ void quickSort(Pokemon pokes[801], int left, int right) {
             Pokemon temp = pokes[i];
             pokes[i] = pokes[j];
             pokes[j] = temp;
+=======
+void QuickSort(Pokemon NewPokedex[801] , int tam , int left , int right){
+ 
+    int i = left;
+    int j = right;
+    int piv = array[(left + right)/2];
+    while ( j >= i )
+    {
+        while ( array[i] < piv ) i++;
+        while ( array[j] > piv ) j--;
+
+        if ( j >= i ) 
+        {
+            swap(array, i, j);
+>>>>>>> Stashed changes
             i++;
             j--;
         }
     }
+<<<<<<< Updated upstream
 
     // Recursão
     if (left < j) quickSort(pokes, left, j);
@@ -217,12 +234,24 @@ void quickSort(Pokemon pokes[801], int left, int right) {
 }
 
 
+=======
+   
+    if ( left < j ) QuickSort(NewPokedex,tam, left, j);
+    if ( right > i ) QuickSort(NewPokedex,tam, i, right);
+
+}
+
+>>>>>>> Stashed changes
 int main(void)
 {
     Pokemon pokemons[1000];
     int totalPokemons;
 
+<<<<<<< Updated upstream
     lerArquivo("/tmp/pokemon.csv", pokemons, &totalPokemons);
+=======
+    lerArquivo("pokemon.csv", pokemons, &totalPokemons);
+>>>>>>> Stashed changes
 
     char input[15];
     int i=0;
@@ -241,9 +270,14 @@ int main(void)
         NewPokemons[i++] = pokemons[id];
 
     }
+<<<<<<< Updated upstream
 
     quickSort(NewPokemons, 0, i-1);
 
+=======
+    QuickSort(NewPokemons, i);
+    
+>>>>>>> Stashed changes
     for(int j =0;j<i;j++){
         printPokemon(&NewPokemons[j]);
     }

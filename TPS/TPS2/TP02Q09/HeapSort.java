@@ -167,7 +167,7 @@ class Pokemon{
 class HeapSort {
     
     public static ArrayList<String> LerCSV(){
-        String csvFile = "pokemon.csv";
+        String csvFile = "/tmp/pokemon.csv";
         ArrayList<String> TextoCSV = new ArrayList<>();
         try{
             BufferedReader br = new BufferedReader(new FileReader(csvFile));
@@ -183,7 +183,11 @@ class HeapSort {
 
     public static void matricula(int mov, int comp, double tempo){
         String conteudo = "855926" + "\t" + comp + "\t" + mov + "\t" + tempo;
+<<<<<<< Updated upstream
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("855926_heapsort.txt"))) {
+=======
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_heapsort.txt"))) {
+>>>>>>> Stashed changes
             writer.write(conteudo);
         } catch (IOException e) {
             e.printStackTrace();
