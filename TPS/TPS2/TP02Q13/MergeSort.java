@@ -214,13 +214,13 @@ class MergeSort {
         
         public static ArrayList<Pokemon>  intercala(ArrayList<Pokemon> newPokedex, int inicio, int meio, int fim) {
             int[] temp = new int[fim - inicio]; 
-            ArrayList<Pokemon>
+            ArrayList<Pokemon> temp = ;
             int i = inicio; 
             int j = meio;   
             int k = 0;      
         
             while (i < meio && j < fim) {
-                if (newPokedex.get(i).getTypes() <= newPokedex.get(j).getTypes()) {
+                if (newPokedex.get(i).getTypes().get(0) <= newPokedex.get(j).getTypes().get(0)) {
                     temp[k++] = vetor[i++];
                 } else {
                     temp[k++] = vetor[j++];
@@ -237,7 +237,6 @@ class MergeSort {
         
             System.arraycopy(temp, 0, vetor, inicio, temp.length);
         }
-    
     
     public static void main(String[] Args){
         Scanner sc = new Scanner(System.in);

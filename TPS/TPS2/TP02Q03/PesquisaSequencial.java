@@ -215,7 +215,7 @@ public static void matricula(int mov, int comp, double tempo){
             }
             NomePokes.add(NomePoke);
         }
-        
+   
         int comp=0;
 
         long startTime = System.nanoTime();
