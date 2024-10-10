@@ -1,147 +1,243 @@
-// Source code is decompiled from a .class file using FernFlower decompiler.
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Scanner;
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+#include <stdlib.h>
 
-class CoutingSort {
-   CoutingSort() {
-   }
+// Atributos de um pokemon
+typedef struct
+{
+    int id;
+    int generation;
+    char name[80];
+    char description[80];
+    char type1[80];
+    char type2[80];
+    char abilities[200];
+    double weight;
+    double height;
+    int captureRate;
+    bool isLegendary;
+    char captureDate[12];
+} Pokemon;
 
-   public static ArrayList<String> LerCSV() {
-      String var0 = "pokemon.csv";
-      ArrayList var1 = new ArrayList();
+// Declaração das funções
+void printPokemon(const Pokemon *pokemon);
+char *strsep(char **stringp, const char *delim);
+void formatarString(char *str);
+void adicionarPokemon(char *linha, Pokemon *pokemon);
+void lerArquivo(const char *nomeArquivo, Pokemon pokemons[], int *totalPokemons);
+int buscarPokemonID(int id, Pokemon pokemons[], int totalPokemons);
 
-      try {
-         BufferedReader var2 = new BufferedReader(new FileReader(var0));
-         var2.readLine();
+// Printar um pokemon em tal formato
+void printPokemon(const Pokemon *pokemon)
+{
+    printf("[#%d -> %s: %s - ['%s'", 
+           pokemon->id, 
+           pokemon->name, 
+           pokemon->description, 
+           pokemon->type1);
+    
+    if (strcmp(pokemon->type2, "") != 0)
+    {
+        printf(", '%s']", pokemon->type2);
+    } else
+    {
+        printf("]");
+    }
 
-         String var3;
-         while((var3 = var2.readLine()) != null) {
-            var1.add(var3);
-         }
+    printf(" - %s - %.1fkg - %.1fm - %d%% - %s - %d gen] - %s", 
+           pokemon->abilities, 
+           pokemon->weight, 
+           pokemon->height, 
+           pokemon->captureRate, 
+           pokemon->isLegendary ? "true" : "false", 
+           pokemon->generation, 
+           pokemon->captureDate);
+}
 
-         var2.close();
-      } catch (Exception var4) {
-         var4.printStackTrace();
-      }
+// Função manual para strsep
+char *strsep(char **stringp, const char *delim)
+{
+    char *start = *stringp;
+    char *p;
 
-      return var1;
-   }
+    if (start == NULL)
+    {
+        return NULL;
+    }
 
-   public static void matricula(int var0, int var1, double var2) {
-      String var4 = "855926\t" + var1 + "\t" + var0 + "\t" + var2;
+    p = strpbrk(start, delim);
+    if (p)
+    {
+        *p = '\0';
+        *stringp = p + 1;
+    }
+    else
+    {
+        *stringp = NULL;
+    }
 
-      try {
-         BufferedWriter var5 = new BufferedWriter(new FileWriter("matr\u00edcula_selecao.txt"));
+    return start;
+}
 
-         try {
-            var5.write(var4);
-         } catch (Throwable var9) {
-            try {
-               var5.close();
-            } catch (Throwable var8) {
-               var9.addSuppressed(var8);
+// Retirar as " da string e substituir todas as , foras de [ ] por ; 
+void formatarString(char *str)
+{
+    int dentroColchetes = 0;  
+    int j = 0;  
+
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        if (str[i] == '[')
+        {
+            dentroColchetes = 1;  
+        } else if (str[i] == ']')
+        {
+            dentroColchetes = 0; 
+        }
+
+        if (str[i] == ',' && dentroColchetes == 0)
+        {
+            str[j++] = ';';
+        }
+        else if (str[i] != '"')
+        {
+            str[j++] = str[i];
+        }
+    }
+
+    str[j] = '\0'; 
+}
+
+// Adicionar um pokemon ao array
+void adicionarPokemon(char *linha, Pokemon *pokemon)
+{
+    char *token;
+    token = strsep(&linha, ";");
+    pokemon->id = atoi(token);
+
+    token = strsep(&linha, ";");
+    pokemon->generation = atoi(token);
+
+    token = strsep(&linha, ";");
+    strcpy(pokemon->name, token);
+
+    token = strsep(&linha, ";");
+    strcpy(pokemon->description, token);
+
+    token = strsep(&linha, ";");
+    strcpy(pokemon->type1, token);
+
+    token = strsep(&linha, ";");
+    if (token[0] != 0) strcpy(pokemon->type2, token);
+
+    token = strsep(&linha, ";");
+    strcpy(pokemon->abilities, token);
+
+    token = strsep(&linha, ";");
+    pokemon->weight = atof(token);  
+
+    token = strsep(&linha, ";");
+    pokemon->height = atof(token);
+
+    token = strsep(&linha, ";");
+    pokemon->captureRate = atoi(token);
+
+    token = strsep(&linha, ";");
+    pokemon->isLegendary = atoi(token);  
+
+    token = strsep(&linha, ";");
+    strcpy(pokemon->captureDate, token);
+}
+
+// Ler o CSV linha por linha e ir setando os pokemons
+void lerArquivo(const char *nomeArquivo, Pokemon pokemons[], int *totalPokemons)
+{
+    FILE *arquivo = fopen(nomeArquivo, "r");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo %s\n", nomeArquivo);
+        return;
+    }
+
+    char linha[512];
+    *totalPokemons = 0;
+
+    while (fgets(linha, sizeof(linha), arquivo))
+    {
+        formatarString(linha);  
+        adicionarPokemon(linha, &pokemons[*totalPokemons]);
+        (*totalPokemons)++;
+    }
+
+    fclose(arquivo);
+}
+
+// Retornar o indice de um pokemon buscado por ID
+int buscarPokemonID(int id, Pokemon pokemons[], int totalPokemons)
+{
+    for (int i = 0; i < totalPokemons; i++)
+    {
+        if (pokemons[i].id == id)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+void bolha(Pokemon pokes[801] , int tam){
+    int i, j;
+    int swapped;
+    Pokemon temp;
+
+    for (i = 0; i < tam - 1; i++) {
+        swapped = 0; 
+        for (j = 0; j < tam - i - 1; j++) {
+            if (pokes[j].id > pokes[j + 1].id) {
+                temp = pokes[j];
+                pokes[j] = pokes[j + 1];
+                pokes[j + 1] = temp;
+                swapped = 1; 
             }
+        }
+        if (swapped == 0) {
+            break;
+        }
+    }
+}
 
-            throw var9;
-         }
 
-         var5.close();
-      } catch (IOException var10) {
-         var10.printStackTrace();
-      }
+int main(void)
+{
+    Pokemon pokemons[1000];
+    int totalPokemons;
 
-   }
+    lerArquivo("/tmp/pokemon.csv", pokemons, &totalPokemons);
 
-   public static ArrayList<Pokemon> OrdenaCoutingSort(ArrayList<Pokemon> var0) {
-      int var1 = var0.size();
-      int var2 = var0.stream().mapToInt(Pokemon::getCaptureRate).max().orElse(0);
-      int[] var3 = new int[var2 + 1];
-      ArrayList var4 = new ArrayList(Collections.nCopies(var1, (Object)null));
+    char input[15];
+    int i=0;
+    Pokemon NewPokemons[801];
 
-      Pokemon var6;
-      for(Iterator var5 = var0.iterator(); var5.hasNext(); ++var3[var6.getCaptureRate()]) {
-         var6 = (Pokemon)var5.next();
-      }
+    while (true)
+    {
+        scanf(" %s", input);
+        
+        if (strcmp(input, "FIM") == 0)
+        {
+            break;
+        }
 
-      int var10;
-      for(var10 = 1; var10 <= var2; ++var10) {
-         var3[var10] += var3[var10 - 1];
-      }
+        int id = atoi(input);
+        NewPokemons[i++] = pokemons[id];
 
-      for(var10 = var1 - 1; var10 >= 0; --var10) {
-         var6 = (Pokemon)var0.get(var10);
-         var4.set(var3[var6.getCaptureRate()] - 1, var6);
-         --var3[var6.getCaptureRate()];
-      }
+    }
 
-      ArrayList var11 = new ArrayList();
+    bolha(NewPokemons, i);
 
-      for(int var12 = 0; var12 <= var2; ++var12) {
-         ArrayList var7 = new ArrayList();
-         Iterator var8 = var4.iterator();
-
-         while(var8.hasNext()) {
-            Pokemon var9 = (Pokemon)var8.next();
-            if (var9 != null && var9.getCaptureRate() == var12) {
-               var7.add(var9);
-            }
-         }
-
-         var7.sort(Comparator.comparing(Pokemon::getName));
-         var11.addAll(var7);
-      }
-
-      return var11;
-   }
-
-   public static void main(String[] var0) {
-      Scanner var1 = new Scanner(System.in);
-      ArrayList var2 = LerCSV();
-      new ArrayList();
-      Pokemon var4 = new Pokemon();
-      ArrayList var3 = var4.lerPokemon(var2);
-      ArrayList var5 = new ArrayList();
-
-      while(true) {
-         String var6 = var1.next();
-         if (var6.equals("FIM")) {
-            ArrayList var11 = new ArrayList();
-            Iterator var12 = var5.iterator();
-
-            while(var12.hasNext()) {
-               int var8 = (Integer)var12.next();
-               Iterator var9 = var3.iterator();
-
-               while(var9.hasNext()) {
-                  Pokemon var10 = (Pokemon)var9.next();
-                  if (var10.getId() == var8) {
-                     var11.add(var10.Pokemonclone());
-                  }
-               }
-            }
-
-            OrdenaCoutingSort(var11);
-            var12 = var11.iterator();
-
-            while(var12.hasNext()) {
-               Pokemon var13 = (Pokemon)var12.next();
-               var13.imprimirPokemon();
-            }
-
-            var1.close();
-            return;
-         }
-
-         int var7 = Integer.parseInt(var6);
-         var5.add(var7);
-      }
-   }
+    for(int j =0;j<i;j++){
+        printPokemon(&NewPokemons[j]);
+    }
+    
+    return 0;
 }

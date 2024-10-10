@@ -150,7 +150,6 @@ void adicionarPokemon(char *linha, Pokemon *pokemon)
     strcpy(pokemon->captureDate, token);
 }
 
-// Ler o CSV linha por linha e ir setando os pokemons
 void lerArquivo(const char *nomeArquivo, Pokemon pokemons[], int *totalPokemons)
 {
     FILE *arquivo = fopen(nomeArquivo, "r");
@@ -172,7 +171,6 @@ void lerArquivo(const char *nomeArquivo, Pokemon pokemons[], int *totalPokemons)
     fclose(arquivo);
 }
 
-// Retornar o indice de um pokemon buscado por ID
 int buscarPokemonID(int id, Pokemon pokemons[], int totalPokemons)
 {
     for (int i = 0; i < totalPokemons; i++)
@@ -186,34 +184,35 @@ int buscarPokemonID(int id, Pokemon pokemons[], int totalPokemons)
     return -1;
 }
 
-void quickSort(Pokemon pokes[801], int left, int right) {
-    int i = left;
-    int j = right;
-    Pokemon piv = pokes[(left + right) / 2]; // meio
+void converterData(char *dataOriginal, char *dataConvertida) {
+    int dia, mes, ano;
+    sscanf(dataOriginal, "%d/%d/%d", &dia, &mes, &ano);
+    sprintf(dataConvertida, "%04d-%02d-%02d", ano, mes, dia);
+}
 
-    while (j >= i) {
-        // Comparação para geração e nome
-        while (pokes[i].generation < piv.generation || 
-               (pokes[i].generation == piv.generation && strcmp(pokes[i].name,piv.name) < 0)) {
-            i++;
-        }
-        while (pokes[j].generation > piv.generation || 
-               (pokes[j].generation == piv.generation && strcmp(pokes[j].name,piv.name) > 0)) {
-            j--;
-        }
+void insercao(Pokemon pokes[801], int tam) {
+    for (int i = 1; i < tam; i++) {
+        int j = i - 1;
+        Pokemon temp = pokes[i];
 
-        if (j >= i) {
-            Pokemon temp = pokes[i];
-            pokes[i] = pokes[j];
-            pokes[j] = temp;
-            i++;
-            j--;
+        char dataTemp[12]; 
+        char dataAtual[12];
+
+        converterData(temp.captureDate, dataTemp);
+
+        while (j >= 0) {
+            converterData(pokes[j].captureDate, dataAtual);
+
+            if (strcmp(dataTemp, dataAtual) < 0 || 
+                (strcmp(dataTemp, dataAtual) == 0 && strcmp(temp.name, pokes[j].name) < 0)) {
+                pokes[j + 1] = pokes[j];
+                j--;
+            } else {
+                break;
+            }
         }
+        pokes[j + 1] = temp; 
     }
-
-    // Recursão
-    if (left < j) quickSort(pokes, left, j);
-    if (i < right) quickSort(pokes, i, right);
 }
 
 
@@ -222,7 +221,7 @@ int main(void)
     Pokemon pokemons[1000];
     int totalPokemons;
 
-    lerArquivo("/tmp/pokemon.csv", pokemons, &totalPokemons);
+    lerArquivo("pokemon.csv", pokemons, &totalPokemons);
 
     char input[15];
     int i=0;
@@ -242,7 +241,7 @@ int main(void)
 
     }
 
-    quickSort(NewPokemons, 0, i-1);
+    insercao(NewPokemons, i);
 
     for(int j =0;j<i;j++){
         printPokemon(&NewPokemons[j]);

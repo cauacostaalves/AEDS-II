@@ -188,19 +188,28 @@ class MergeSort {
         }
     }
 
+    public static int comp =0;
+    public static int mov =0;
+
     public static ArrayList<Pokemon> OrdenaMergeSort(ArrayList<Pokemon> newPokedex) {
             int tamanho = newPokedex.size();
             int elementos = 1; 
             int inicio, meio, fim;
-        
+            long startTime = System.nanoTime();
+
+            comp++;
             while (elementos < tamanho) {
-                inicio = 0;
                 
+                inicio = 0;
+                comp++;
                 while (inicio + elementos < tamanho) {
+                    
                     meio = inicio + elementos;
                     fim = inicio + 2 * elementos;
-        
+                    
+                    comp++;
                     if (fim > tamanho) {
+                        
                         fim = tamanho;
                     }
         
@@ -210,33 +219,59 @@ class MergeSort {
         
                 elementos *= 2;
             }
+
+
+            long endTime = System.nanoTime();
+            long duration = endTime - startTime;
+            double durationMili = duration / 1_000_000.0;
+            matricula(mov, comp, durationMili); 
+
+            return newPokedex;
         }
         
-        public static ArrayList<Pokemon>  intercala(ArrayList<Pokemon> newPokedex, int inicio, int meio, int fim) {
-            int[] temp = new int[fim - inicio]; 
-            ArrayList<Pokemon> temp = ;
+        public static void intercala(ArrayList<Pokemon> newPokedex, int inicio, int meio, int fim) {
+            ArrayList<Pokemon> temp = new ArrayList<>(fim - inicio); 
             int i = inicio; 
             int j = meio;   
-            int k = 0;      
-        
+                
+            comp+=2;
             while (i < meio && j < fim) {
-                if (newPokedex.get(i).getTypes().get(0) <= newPokedex.get(j).getTypes().get(0)) {
-                    temp[k++] = vetor[i++];
+                String typeI = newPokedex.get(i).getTypes().get(0);
+                String typeJ = newPokedex.get(j).getTypes().get(0);
+                comp++;
+                if (typeI.compareTo(typeJ) < 0) {
+                    
+                    temp.add(newPokedex.get(i++));
+                } else if (typeI.compareTo(typeJ) > 0) {
+                    
+                    temp.add(newPokedex.get(j++));
                 } else {
-                    temp[k++] = vetor[j++];
+
+                    String nameI = newPokedex.get(i).getName();
+                    String nameJ = newPokedex.get(j).getName();
+                    comp++;
+                    if (nameI.compareTo(nameJ) < 0) {
+                        temp.add(newPokedex.get(i++));
+                    } else {
+                        temp.add(newPokedex.get(j++));
+                    }
                 }
             }
-        
+            comp++;
             while (i < meio) {
-                temp[k++] = vetor[i++];
+                temp.add(newPokedex.get(i++));
             }
-        
+            comp++;
             while (j < fim) {
-                temp[k++] = vetor[j++];
+                temp.add(newPokedex.get(j++));
             }
-        
-            System.arraycopy(temp, 0, vetor, inicio, temp.length);
+            
+            for (int k = 0; k < temp.size(); k++) {
+                mov++;
+                newPokedex.set(inicio + k, temp.get(k));
+            }
         }
+        
     
     public static void main(String[] Args){
         Scanner sc = new Scanner(System.in);

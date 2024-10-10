@@ -181,7 +181,7 @@ class CoutingSort {
 
     public static void matricula(int mov, int comp, double tempo){
         String conteudo = "855926" + "\t" + comp + "\t" + mov + "\t" + tempo;
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_coutingsort.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("866926coutingsort.txt"))) {
             writer.write(conteudo);
         } catch (IOException e) {
             e.printStackTrace();
