@@ -211,7 +211,7 @@ class OrdenacaoSelecao {
         double durationMili = duration/ 1_000_000.0;
 
         String conteudo = "855926" + "\t" + comp + "\t" + mov + "\t" + durationMili;
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_selecao.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("855926_selecao.txt"))) {
             writer.write(conteudo);
         } catch (IOException e) {
             e.printStackTrace();

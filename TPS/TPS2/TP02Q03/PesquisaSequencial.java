@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.time.LocalDate;
@@ -158,7 +161,17 @@ class Pokemon{
     }
 }
 
+
 class PesquisaSequencial {
+    
+public static void matricula(int mov, int comp, double tempo){
+    String conteudo = "855926" + "\t" + comp + "\t" + tempo;
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter("855926_sequencial.txt"))) {
+        writer.write(conteudo);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
     
     public static ArrayList<String> LerCSV(){
         String csvFile = "/tmp/pokemon.csv";
@@ -203,12 +216,17 @@ class PesquisaSequencial {
             NomePokes.add(NomePoke);
         }
         
+        int comp=0;
+
+        long startTime = System.nanoTime();
 
         for(String n: NomePokes){
             boolean achou =false;
             for(Pokemon p: Pokedex){
+                comp++;
                 if(p.getName().equals(n)){
                         for(int i:Pokemons){
+                            comp++;
                             if(p.getId() == i){
                                 achou = true;
                             }
@@ -222,6 +240,12 @@ class PesquisaSequencial {
             }
         }
 
+        long endTime = System.nanoTime();
+        long duration = endTime - startTime;
+
+        double durationMili = duration/ 1_000_000.0;
+        int mov=0;
+        matricula(mov, comp, durationMili);
         sc.close();
     }
 }

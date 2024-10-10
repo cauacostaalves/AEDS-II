@@ -252,7 +252,6 @@ class OrdenacaoSelecaoParcial {
         OrdenaSelecao(NewPokedex);
         int tam=0;
         for(Pokemon p:NewPokedex){
-            
             if(tam==10){break;}
             p.imprimirPokemon();
             tam++;

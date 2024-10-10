@@ -1,3 +1,8 @@
+package TPS.TPS2.TP02Q13;
+
+public class MergeSort {
+    
+}
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -130,14 +135,14 @@ class Pokemon{
             if(!temp[8].isEmpty()){
                 height = Double.parseDouble(temp[8]);
             }
-            int captureRat = Integer.parseInt(temp[9]);
+            int captureRate = Integer.parseInt(temp[9]);
             if(temp[10].equals("1")){
                 isLegendary = true;
             }else{
                 isLegendary = false;
             }
             LocalDate captureDate = LocalDate.parse(temp[11], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            Pokemon PokeTemp = new Pokemon(id, generation , name , description , types , abilities , weight , height , captureRat, isLegendary ,captureDate); 
+            Pokemon PokeTemp = new Pokemon(id, generation , name , description , types , abilities , weight , height , captureRate, isLegendary ,captureDate); 
             Pokedex.add(PokeTemp);
             idPoke++;
         }
@@ -162,7 +167,7 @@ class Pokemon{
     }
 }
 
-class OrdenacaoInsercao {
+class CoutingSort {
     
     public static ArrayList<String> LerCSV(){
         String csvFile = "/tmp/pokemon.csv";
@@ -181,43 +186,50 @@ class OrdenacaoInsercao {
 
     public static void matricula(int mov, int comp, double tempo){
         String conteudo = "855926" + "\t" + comp + "\t" + mov + "\t" + tempo;
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("855926_insercao.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_coutingsort.txt"))) {
             writer.write(conteudo);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static ArrayList<Pokemon> OrdenaInsercao(ArrayList<Pokemon> NewPokedex){
-
-        int tam = NewPokedex.size();
-        int comp =0;
-        int mov=0;
-        long startTime = System.nanoTime();
-
-        for(int i =1; i<tam; i++){
-            int j = i-1;
-
-            LocalDate DateTemp = NewPokedex.get(i).getCaptureDate();
-            Pokemon temp = NewPokedex.get(i);
-            
-            while( j >= 0 && DateTemp.isBefore(NewPokedex.get(j).getCaptureDate())){
-                comp +=2;
-                NewPokedex.set(j+1, NewPokedex.get(j));
-                mov++;
-                j--;
-            }
-            NewPokedex.set(j+1,temp);
-            mov++;
+    public static ArrayList<Pokemon> OrdenaCoutingSort(ArrayList<Pokemon> newPokedex) {
+        int tam = newPokedex.size();
+        int maxCaptureRate = newPokedex.stream().mapToInt(Pokemon::getCaptureRate).max().orElse(0);
+        int[] count = new int[maxCaptureRate + 1];
+        ArrayList<Pokemon> sortedPokedex = new ArrayList<>(Collections.nCopies(tam, null));
+    
+        for (Pokemon pokemon : newPokedex) {
+            count[pokemon.getCaptureRate()]++;
         }
+
+        for (int i = 1; i <= maxCaptureRate; i++) {
+            count[i] += count[i - 1];
+        }
+    
+        for (int i = tam - 1; i >= 0; i--) {
+            Pokemon pokemon = newPokedex.get(i);
+            sortedPokedex.set(count[pokemon.getCaptureRate()] - 1, pokemon);
+            count[pokemon.getCaptureRate()]--;
+        }
+    
+        ArrayList<Pokemon> finalSortedPokedex = new ArrayList<>();
         
-        long endTime = System.nanoTime();
-        long duration = endTime - startTime;
-        double durationMili = duration/ 1_000_000.0;
-        matricula(mov, comp, durationMili);
-        
-        return NewPokedex;
+        for (int i = 0; i <= maxCaptureRate; i++) {
+            ArrayList<Pokemon> tempList = new ArrayList<>();
+            for (Pokemon pokemon : sortedPokedex) {
+                if (pokemon != null && pokemon.getCaptureRate() == i) {
+                    tempList.add(pokemon);
+                }
+            }
+
+            tempList.sort(Comparator.comparing(Pokemon::getName));
+            finalSortedPokedex.addAll(tempList);
+        }
+    
+        return finalSortedPokedex;
     }
+    
 
     
     public static void main(String[] Args){
@@ -248,7 +260,7 @@ class OrdenacaoInsercao {
             }
         }
 
-        OrdenaInsercao(NewPokedex);
+        OrdenaCoutingSort(NewPokedex);
 
         for(Pokemon p:NewPokedex){
             p.imprimirPokemon();

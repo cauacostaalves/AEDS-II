@@ -186,19 +186,23 @@ int buscarPokemonID(int id, Pokemon pokemons[], int totalPokemons)
     return -1;
 }
 
-
-void QuickSort(Pokemon pokes[801],int left , int right){
-   
+void quickSort(Pokemon pokes[801], int left, int right) {
     int i = left;
     int j = right;
-    Pokemon piv = pokes[(left + right)/2];
-    while ( j >= i )
-    {
-        while ( pokes[i].generation < piv.generation || (pokes[i].generation == piv.generation && strcmp(pokes[i].name, piv.name) > 0) ) i++;
-        while ( pokes[j].generation > piv.generation || (pokes[i].generation == piv.generation && strcmp(pokes[i].name, piv.name) < 0)) j--;
+    Pokemon piv = pokes[(left + right) / 2]; // meio
 
-        if ( j >= i ) 
-        {
+    while (j >= i) {
+        // Comparação para geração e nome
+        while (pokes[i].generation < piv.generation || 
+               (pokes[i].generation == piv.generation && strcmp(pokes[i].name,piv.name) < 0)) {
+            i++;
+        }
+        while (pokes[j].generation > piv.generation || 
+               (pokes[j].generation == piv.generation && strcmp(pokes[j].name,piv.name) > 0)) {
+            j--;
+        }
+
+        if (j >= i) {
             Pokemon temp = pokes[i];
             pokes[i] = pokes[j];
             pokes[j] = temp;
@@ -206,13 +210,11 @@ void QuickSort(Pokemon pokes[801],int left , int right){
             j--;
         }
     }
-   
-    if ( left < j ) QuickSort(pokes, left, j);
-    if ( right > i ) QuickSort(pokes, i, right);
 
+    // Recursão
+    if (left < j) quickSort(pokes, left, j);
+    if (i < right) quickSort(pokes, i, right);
 }
-
-
 
 
 int main(void)
@@ -240,7 +242,7 @@ int main(void)
 
     }
 
-    QuickSort(NewPokemons,0,i);
+    quickSort(NewPokemons, 0, i-1);
 
     for(int j =0;j<i;j++){
         printPokemon(&NewPokemons[j]);
