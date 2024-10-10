@@ -162,12 +162,10 @@ class Pokemon{
     }
 }
 
-
-
-class HeapSort {
+class CoutingSort {
     
     public static ArrayList<String> LerCSV(){
-        String csvFile = "/tmp/pokemon.csv";
+        String csvFile = "pokemon.csv";
         ArrayList<String> TextoCSV = new ArrayList<>();
         try{
             BufferedReader br = new BufferedReader(new FileReader(csvFile));
@@ -183,79 +181,29 @@ class HeapSort {
 
     public static void matricula(int mov, int comp, double tempo){
         String conteudo = "855926" + "\t" + comp + "\t" + mov + "\t" + tempo;
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_heapsort.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_selecao.txt"))) {
             writer.write(conteudo);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static int mov = 0; 
-    private static int comp = 0; 
+    public static ArrayList<Pokemon> OrdenaCoutingSort(ArrayList<Pokemon> NewPokedex){
 
-    public static ArrayList<Pokemon> OrdenaHeapSort(ArrayList<Pokemon> NewPokedex) {
         int tam = NewPokedex.size();
+        int comp =0;
+        int mov=0;
         long startTime = System.nanoTime();
 
-        for (int i = tam / 2 - 1; i >= 0; i--) {
-            redoHeap(NewPokedex, tam, i);
-        }
-
-        for (int endIndex = tam - 1; endIndex > 0; endIndex--) {
-            swap(NewPokedex, 0, endIndex);
-            redoHeap(NewPokedex, endIndex, 0);
-        }
-
+        
         long endTime = System.nanoTime();
         long duration = endTime - startTime;
-        double durationMili = duration / 1_000_000.0;
-        matricula(mov, comp, durationMili); 
-
+        double durationMili = duration/ 1_000_000.0;
+        matricula(mov, comp, durationMili);
+        
         return NewPokedex;
     }
 
-    public static void redoHeap(ArrayList<Pokemon> NewPokedex, int tam, int i) {
-        int maior = i; 
-        int esquerda = 2 * i + 1; 
-        int direita = 2 * i + 2; 
-
-        
-
-        if (esquerda < tam) {
-            if (NewPokedex.get(esquerda).getHeight() > NewPokedex.get(maior).getHeight() ||
-            (NewPokedex.get(esquerda).getHeight() == NewPokedex.get(maior).getHeight() &&
-             NewPokedex.get(esquerda).getName().compareTo(NewPokedex.get(maior).getName()) > 0)) {
-                comp+=3;
-                maior = esquerda;
-        }
-            comp++;
-        }
-
-        if (direita < tam) {
-            if (NewPokedex.get(direita).getHeight() > NewPokedex.get(maior).getHeight() ||
-            (NewPokedex.get(direita).getHeight() == NewPokedex.get(maior).getHeight() &&
-             NewPokedex.get(direita).getName().compareTo(NewPokedex.get(maior).getName()) > 0)) {
-                comp+=3;
-                maior = direita;
-        }
-            comp++;
-        }
-
-        if (maior != i) {
-
-            comp++;
-            swap(NewPokedex, i, maior);
-            redoHeap(NewPokedex, tam, maior);
-        }
-
-    }
-
-    public static void swap(ArrayList<Pokemon> NewPokedex, int i, int j) {
-        mov+=3;
-        Pokemon temp = NewPokedex.get(i);
-        NewPokedex.set(i, NewPokedex.get(j));
-        NewPokedex.set(j, temp);
-    }
     
     public static void main(String[] Args){
         Scanner sc = new Scanner(System.in);
@@ -265,28 +213,33 @@ class HeapSort {
         Pokemon ler = new Pokemon();
         Pokedex = ler.lerPokemon(Pokes);
 
-        ArrayList<Pokemon> NewPokedex = new ArrayList<>();
-
+        List<Integer> IDS = new ArrayList<>();
         while(true){
             String idPokemon = sc.next();
             if(idPokemon.equals("FIM")){
             break;
             }
             int idPok = Integer.parseInt(idPokemon);
-            
+            IDS.add(idPok);
+        }
+
+        ArrayList<Pokemon> NewPokedex = new ArrayList<>();
+
+        for(int id: IDS){
             for(Pokemon p:Pokedex){
-                if(p.getId() == idPok){
+                if(p.getId() == id){
                     NewPokedex.add(p.Pokemonclone());
                 }
             }
-            
         }
 
-        OrdenaHeapSort(NewPokedex);
+        OrdenaCoutingSort(NewPokedex);
 
         for(Pokemon p:NewPokedex){
             p.imprimirPokemon();
         }
+
+        
 
         sc.close();
     }
