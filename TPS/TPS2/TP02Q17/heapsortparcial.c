@@ -4,8 +4,7 @@
 #include <stdlib.h>
 
 // Atributos de um pokemon
-typedef struct
-{
+typedef struct {
     int id;
     int generation;
     char name[80];
@@ -27,21 +26,20 @@ void formatarString(char *str);
 void adicionarPokemon(char *linha, Pokemon *pokemon);
 void lerArquivo(const char *nomeArquivo, Pokemon pokemons[], int *totalPokemons);
 int buscarPokemonID(int id, Pokemon pokemons[], int totalPokemons);
+void heapsort(Pokemon pokes[], int tam);
+void redoHeap(Pokemon pokes[], int tam, int i);
+void swap(Pokemon pokes[], int i, int j);
 
-// Printar um pokemon em tal formato
-void printPokemon(const Pokemon *pokemon)
-{
+void printPokemon(const Pokemon *pokemon) {
     printf("[#%d -> %s: %s - ['%s'", 
            pokemon->id, 
            pokemon->name, 
            pokemon->description, 
            pokemon->type1);
     
-    if (strcmp(pokemon->type2, "") != 0)
-    {
+    if (strcmp(pokemon->type2, "") != 0) {
         printf(", '%s']", pokemon->type2);
-    } else
-    {
+    } else {
         printf("]");
     }
 
@@ -55,53 +53,39 @@ void printPokemon(const Pokemon *pokemon)
            pokemon->captureDate);
 }
 
-// Função manual para strsep
-char *strsep(char **stringp, const char *delim)
-{
+char *strsep(char **stringp, const char *delim) {
     char *start = *stringp;
     char *p;
 
-    if (start == NULL)
-    {
+    if (start == NULL) {
         return NULL;
     }
 
     p = strpbrk(start, delim);
-    if (p)
-    {
+    if (p) {
         *p = '\0';
         *stringp = p + 1;
-    }
-    else
-    {
+    } else {
         *stringp = NULL;
     }
 
     return start;
 }
 
-// Retirar as " da string e substituir todas as , foras de [ ] por ; 
-void formatarString(char *str)
-{
+void formatarString(char *str) {
     int dentroColchetes = 0;  
     int j = 0;  
 
-    for (int i = 0; str[i] != '\0'; i++)
-    {
-        if (str[i] == '[')
-        {
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] == '[') {
             dentroColchetes = 1;  
-        } else if (str[i] == ']')
-        {
+        } else if (str[i] == ']') {
             dentroColchetes = 0; 
         }
 
-        if (str[i] == ',' && dentroColchetes == 0)
-        {
+        if (str[i] == ',' && !dentroColchetes) {
             str[j++] = ';';
-        }
-        else if (str[i] != '"')
-        {
+        } else if (str[i] != '"') {
             str[j++] = str[i];
         }
     }
@@ -109,10 +93,9 @@ void formatarString(char *str)
     str[j] = '\0'; 
 }
 
-// Adicionar um pokemon ao array
-void adicionarPokemon(char *linha, Pokemon *pokemon)
-{
+void adicionarPokemon(char *linha, Pokemon *pokemon) {
     char *token;
+
     token = strsep(&linha, ";");
     pokemon->id = atoi(token);
 
@@ -129,7 +112,7 @@ void adicionarPokemon(char *linha, Pokemon *pokemon)
     strcpy(pokemon->type1, token);
 
     token = strsep(&linha, ";");
-    if (token[0] != 0) strcpy(pokemon->type2, token);
+    strcpy(pokemon->type2, token[0] != '\0' ? token : "");
 
     token = strsep(&linha, ";");
     strcpy(pokemon->abilities, token);
@@ -150,8 +133,7 @@ void adicionarPokemon(char *linha, Pokemon *pokemon)
     strcpy(pokemon->captureDate, token);
 }
 
-void lerArquivo(const char *nomeArquivo, Pokemon pokemons[], int *totalPokemons)
-{
+void lerArquivo(const char *nomeArquivo, Pokemon pokemons[], int *totalPokemons) {
     FILE *arquivo = fopen(nomeArquivo, "r");
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo %s\n", nomeArquivo);
@@ -161,8 +143,7 @@ void lerArquivo(const char *nomeArquivo, Pokemon pokemons[], int *totalPokemons)
     char linha[512];
     *totalPokemons = 0;
 
-    while (fgets(linha, sizeof(linha), arquivo))
-    {
+    while (fgets(linha, sizeof(linha), arquivo)) {
         formatarString(linha);  
         adicionarPokemon(linha, &pokemons[*totalPokemons]);
         (*totalPokemons)++;
@@ -171,12 +152,9 @@ void lerArquivo(const char *nomeArquivo, Pokemon pokemons[], int *totalPokemons)
     fclose(arquivo);
 }
 
-int buscarPokemonID(int id, Pokemon pokemons[], int totalPokemons)
-{
-    for (int i = 0; i < totalPokemons; i++)
-    {
-        if (pokemons[i].id == id)
-        {
+int buscarPokemonID(int id, Pokemon pokemons[], int totalPokemons) {
+    for (int i = 0; i < totalPokemons; i++) {
+        if (pokemons[i].id == id) {
             return i;
         }
     }
@@ -184,66 +162,78 @@ int buscarPokemonID(int id, Pokemon pokemons[], int totalPokemons)
     return -1;
 }
 
-void converterData(char *dataOriginal, char *dataConvertida) {
-    int dia, mes, ano;
-    sscanf(dataOriginal, "%d/%d/%d", &dia, &mes, &ano);
-    sprintf(dataConvertida, "%04d-%02d-%02d", ano, mes, dia);
-}
+void heapsort(Pokemon pokes[], int tam) {
+    for (int i = tam / 2 - 1; i >= 0; i--) {
+        redoHeap(pokes, tam, i);
+    }
 
-void insercao(Pokemon pokes[801], int tam) {
-    for (int i = 1; i < tam; i++) {
-        int j = i - 1;
-        Pokemon temp = pokes[i];
-
-        char dataTemp[12]; 
-        char dataAtual[12];
-
-        converterData(temp.captureDate, dataTemp);
-
-        while (j >= 0) {
-            converterData(pokes[j].captureDate, dataAtual);
-
-            if (strcmp(dataTemp, dataAtual) < 0 || 
-                (strcmp(dataTemp, dataAtual) == 0 && strcmp(temp.name, pokes[j].name) < 0)) {
-                pokes[j + 1] = pokes[j];
-                j--;
-            } else {
-                break;
-            }
-        }
-        pokes[j + 1] = temp; 
+    for (int endIndex = tam - 1; endIndex > 0; endIndex--) {
+        swap(pokes, 0, endIndex);
+        redoHeap(pokes, endIndex, 0);
     }
 }
 
+void redoHeap(Pokemon pokes[], int tam, int i) {
+    int maior = i; 
+    int esquerda = 2 * i + 1; 
+    int direita = 2 * i + 2; 
 
-int main(void)
-{
+    if (esquerda < tam) {
+        if (pokes[esquerda].height > pokes[maior].height ||
+            (pokes[esquerda].height == pokes[maior].height &&
+             strcmp(pokes[esquerda].name, pokes[maior].name) > 0)) {
+            maior = esquerda;
+        }
+    }
+
+    if (direita < tam) {
+        if (pokes[direita].height > pokes[maior].height ||
+            (pokes[direita].height == pokes[maior].height &&
+             strcmp(pokes[direita].name, pokes[maior].name) > 0)) {
+            maior = direita;
+        }
+    }
+
+    if (maior != i) {
+        swap(pokes, i, maior);
+        redoHeap(pokes, tam, maior);
+    }
+}
+
+void swap(Pokemon pokes[], int i, int j) {
+    Pokemon temp = pokes[i];
+    pokes[i] = pokes[j];
+    pokes[j] = temp;
+}
+
+int main(void) {
     Pokemon pokemons[1000];
     int totalPokemons;
 
     lerArquivo("/tmp/pokemon.csv", pokemons, &totalPokemons);
 
     char input[15];
-    int i=0;
+    int i = 0;
     Pokemon NewPokemons[801];
 
-    while (true)
-    {
+    while (true) {
         scanf(" %s", input);
         
-        if (strcmp(input, "FIM") == 0)
-        {
+        if (strcmp(input, "FIM") == 0) {
             break;
         }
 
         int id = atoi(input);
-        NewPokemons[i++] = pokemons[id];
-
+        if (id >= 0 && id < totalPokemons) { // Validate the ID
+            NewPokemons[i++] = pokemons[id];
+        } else {
+            printf("ID inválido: %d\n", id);
+        }
     }
 
-    insercao(NewPokemons, i);
+    heapsort(NewPokemons, i);
 
-    for(int j =0;j<10;j++){
+    for (int j = 0; j < 10 && j < i; j++) {
         printPokemon(&NewPokemons[j]);
     }
     

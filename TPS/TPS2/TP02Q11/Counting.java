@@ -133,7 +133,7 @@ class Pokemon {
     }
 }
 
-public class sorteteste {
+public class Counting {
     public static void main(String[] args) {
         Pokemon pokemonManager = new Pokemon();
         ArrayList<Pokemon> pokemons = pokemonManager.Ler();
@@ -141,7 +141,7 @@ public class sorteteste {
 
         if (pokemons.isEmpty()) {
             System.out.println("Nenhum Pokémon encontrado.");
-        } else {    
+        } else {
             searchPokemonId(pokemons, pokemonsOrdenados);
 
             // Inicializando contadores
@@ -164,54 +164,80 @@ public class sorteteste {
         }
     }
 
-    public static ArrayList<Pokemon> countingSort(ArrayList<Pokemon> pokemons, int comparacoes, int movimentacoes) {
-        int maxCaptureRate = getMaxCaptureRate(pokemons);
-        int[] countArray = new int[maxCaptureRate + 1];
-        Pokemon[] sortedPokemons = new Pokemon[pokemons.size()];
-    
-        // Contagem dos captureRates
-        for (Pokemon pokemon : pokemons) {
-            countArray[pokemon.getCaptureRate()]++;
-            movimentacoes++; // Conta a movimentação
-        }
-    
-        // Acumular os valores de contagem
-        for (int i = 1; i <= maxCaptureRate; i++) {
-            countArray[i] += countArray[i - 1];
-        }
-    
-        // Ordenar os Pokémon
-        for (int i = pokemons.size() - 1; i >= 0; i--) {
-            Pokemon pokemon = pokemons.get(i);
-            int posicao = countArray[pokemon.getCaptureRate()] - 1;
-    
-            // Desempatar por nome
-            while (posicao > 0 && sortedPokemons[posicao - 1] != null &&
-                   sortedPokemons[posicao - 1].getCaptureRate() == pokemon.getCaptureRate() &&
-                   sortedPokemons[posicao - 1].getName().compareTo(pokemon.getName()) > 0) {
-                posicao--;
-            }
-    
-            sortedPokemons[posicao] = pokemon;
-            countArray[pokemon.getCaptureRate()]--;
-            movimentacoes++; // Conta a movimentação
-        }
-    
-        // Converter o array de volta para ArrayList
-        ArrayList<Pokemon> sortedList = new ArrayList<>();
-        for (Pokemon pokemon : sortedPokemons) {
-            if (pokemon != null) {
-                sortedList.add(pokemon);
-            }
-        }
-    
-        return sortedList;
+ // Ordenar utilizando Counting Sort com desempate por nome
+ public static ArrayList<Pokemon> countingSort(ArrayList<Pokemon> pokemons, int comparacoes, int movimentacoes) {
+    int maxCaptureRate = getMaxCaptureRate(pokemons);
+    int[] countArray = new int[maxCaptureRate + 1];
+    ArrayList<ArrayList<Pokemon>> buckets = new ArrayList<>(maxCaptureRate + 1);
+
+    // Arrays para armazenar as comparações e movimentações, pois são efetivamente finais
+    int[] comparacoesArray = {comparacoes};
+    int[] movimentacoesArray = {movimentacoes};
+
+    // Inicializar as listas de buckets para cada valor de captureRate
+    for (int i = 0; i <= maxCaptureRate; i++) {
+        buckets.add(new ArrayList<>());
     }
-    
+
+    // Preencher os buckets com os Pokémon de acordo com seu captureRate
+    for (Pokemon pokemon : pokemons) {
+        buckets.get(pokemon.getCaptureRate()).add(pokemon);
+    }
+
+    // Ordenar cada bucket individualmente por nome usando a comparação de strings
+    for (ArrayList<Pokemon> bucket : buckets) {
+        bucket.sort((p1, p2) -> {
+            comparacoesArray[0]++; // Contar a comparação
+            return p1.getName().compareTo(p2.getName());
+        });
+    }
+
+    // Reunir os Pokémon ordenados a partir dos buckets
+    ArrayList<Pokemon> sortedList = new ArrayList<>();
+    for (ArrayList<Pokemon> bucket : buckets) {
+        for (Pokemon pokemon : bucket) {
+            sortedList.add(pokemon);
+            movimentacoesArray[0]++; // Contar a movimentação
+        }
+    }
+
+    // Atualizar os contadores finais
+    comparacoes = comparacoesArray[0];
+    movimentacoes = movimentacoesArray[0];
+
+    return sortedList;
+}
+
+
+    // Método para obter o valor máximo do captureRate
+    public static int getMaxCaptureRate(ArrayList<Pokemon> pokemons) {
+        int max = pokemons.get(0).getCaptureRate();
+        for (int i = 1; i < pokemons.size(); i++) {
+            if (pokemons.get(i).getCaptureRate() > max) {
+                max = pokemons.get(i).getCaptureRate();
+            }
+        }
+        return max;
+    }
+
+    // Método para ler a entrada e encontrar os Pokémon pelo ID
+    public static void searchPokemonId(ArrayList<Pokemon> pokemons, ArrayList<Pokemon> pokemonsOrdenados) {
+        Scanner sc = new Scanner(System.in);
+        String resp;
+        while (!(resp = sc.nextLine()).equals("FIM")) {
+            int id = Integer.parseInt(resp);
+            for (Pokemon pokemon : pokemons) {
+                if (pokemon.getId() == id) {
+                    pokemonsOrdenados.add(pokemon);
+                }
+            }
+        }
+        sc.close();
+    }
 
     // Escrever o arquivo de log
     public static void escreverLog(long tempoExecucao, int comparacoes, int movimentacoes) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter("848122_countingsort.txt"))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("855926_countingsort.txt"))) {
             writer.printf("848122\t%dms\t%d comparacoes\t%d movimentacoes\n", tempoExecucao, comparacoes, movimentacoes);
         } catch (Exception e) {
             e.printStackTrace();
