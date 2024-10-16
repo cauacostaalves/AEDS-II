@@ -17,12 +17,8 @@ import java.util.*;
 */
 
 public class QuickSort {
-    
-    public static  int movimentaçoes = 0;
-    public static  int comparaçoes = 0;
 
     public static void swap(int i,int j,int array[]){
-        movimentaçoes +=3;
         int temp = array[i];
         array[i] = array[j];
         array[j] = temp;
@@ -35,21 +31,17 @@ public class QuickSort {
 
 
         while(i<=j){
-            comparaçoes++;
-            while(array[i] < pivo){i++;} // pega o maior q o pivo 
-            comparaçoes++;
-            while(array[j] > pivo){j--;} // pega o menor q o pivo 
-            comparaçoes++;
+            while(array[i] < pivo){i++; } // pega o maior q o pivo 
+            while(array[j] > pivo){j--; } // pega o menor q o pivo 
             if(i<=j){ // se possivel fazer a troca do maior e do menor para a ordenaçao 
                 swap(i,j,array);
                 i++;
                 j--;
             }
-            comparaçoes++;
         }
-        comparaçoes++;
+        
         if(i <= dir){QuickSort(array,esq,j);} // pega a parte da esquerda para ordenar
-        comparaçoes++;
+        
         if(j >= esq){QuickSort(array,i,dir);} // pega a parte da direita para ordenar
     }
 
@@ -59,7 +51,6 @@ public class QuickSort {
         for(int i:array){
             System.out.print(i + " ");
         }
-        System.out.println("Comparaçoes: " + comparaçoes + " Movimentaçoes: " + movimentaçoes);
     }
 
 }
