@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class FilaNativa {
+public class FilaNativa { // flexivel
    public static void main(String[] args) throws Exception {
       Queue<String> fila = new LinkedList<String>();
 
