@@ -51,9 +51,3 @@ int main() {
     inserir(&pilha, 3);
     int removido = remover(&pilha);
     printf("Removido: %d\n", removido);
-    inserir(&pilha, 5);
-    inserir(&pilha, 8);
-    mostrar(&pilha);
-    
-    return 0;
-}
