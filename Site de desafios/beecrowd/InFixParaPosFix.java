@@ -3,14 +3,24 @@ import java.util.*;
 
 
 public class InFixParaPosFix {
+    // +,-,*,/,^, parênteses, letras e números
 
     public static void InParaPos(String input){
-        for (int i =0; i<input.length(); i++) {
+        Stack<String> operadores = new Stack<>();
+        Stack<String> caracteres = new Stack<>();
+        
+        for(int i = 0; i< input.length(); i++){ 
             char tmp = input.charAt(i);
-            if (tmp.) {
-                String saida += tmp;    
+            boolean parenteses = false;
+            if (tmp == '+' || tmp == '-' || tmp =='*' || tmp == '^') {
+                
+            }else if (tmp == '(') {
+                
             }
+            
         }
+
+        System.out.println(caracteres);
     }
 
     public static void main(String[] args) {
