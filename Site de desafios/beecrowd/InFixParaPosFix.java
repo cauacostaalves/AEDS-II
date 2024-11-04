@@ -3,24 +3,40 @@ import java.util.*;
 
 
 public class InFixParaPosFix {
-    // +,-,*,/,^, parênteses, letras e números
 
     public static void InParaPos(String input){
-        Stack<String> operadores = new Stack<>();
-        Stack<String> caracteres = new Stack<>();
-        
+        Stack<Character> operadores = new Stack<>();
+        Stack<Character> caracteres = new Stack<>();
+        boolean parenteses = false;
         for(int i = 0; i< input.length(); i++){ 
             char tmp = input.charAt(i);
-            boolean parenteses = false;
-            if (tmp == '+' || tmp == '-' || tmp =='*' || tmp == '^') {
-                
-            }else if (tmp == '(') {
-                
-            }
             
-        }
+            if (tmp == '+' || tmp == '-' || tmp =='*' || tmp == '^') {
+                if(!operadores.isEmpty()){
+                    char ca = operadores.pop();
+                    caracteres.push(ca);
+                   
+                }
+                operadores.push(tmp);
+            }else if (tmp == '(' || tmp == ')') {
+                if(tmp == '('){parenteses = false;}
+                else if(tmp == ')'){parenteses = true;}
+            }else{
+                caracteres.push(tmp);
+            }
 
-        System.out.println(caracteres);
+            if (parenteses) {
+                caracteres.push('/');
+                parenteses = false;
+            }
+        }
+        if(!operadores.isEmpty()){
+            char ca = operadores.pop();
+            caracteres.push(ca);
+        }
+        for(int i=0; i<caracteres.size(); i++){
+            System.out.print(caracteres.get(i));
+        }
     }
 
     public static void main(String[] args) {
