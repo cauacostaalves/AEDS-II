@@ -1,13 +1,16 @@
 
-import java.util.Scanner;
-import java.util.Stack;
+import java.util.*;
+
 
 public class InFixParaPosFix {
 
-    public static void PosFix( String input){
-        Stack<String> pilha = new Stack();
-        String tmp = input ;
-
+    public static void InParaPos(String input){
+        for (int i =0; i<input.length(); i++) {
+            char tmp = input.charAt(i);
+            if (tmp.) {
+                String saida += tmp;    
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -15,7 +18,7 @@ public class InFixParaPosFix {
         int n = sc.nextInt();
         for (int i=0;i<n;i++) {
             String input = sc.next();
-            PosFix(input);
+            InParaPos(input);
         }    
         sc.close();
     }
