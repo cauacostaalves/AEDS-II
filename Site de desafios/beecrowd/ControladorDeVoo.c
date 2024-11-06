@@ -47,11 +47,11 @@ void remover(Fila* fila){
     printf("%s ",tmp->elemento);
 
     fila->primeiro = fila->primeiro->prox;
+    tmp->prox = NULL;
     free(tmp);
     if(fila->primeiro == NULL){
         fila->ultimo = NULL;
     }
-    
 }
 
 bool isEmpty(Fila* fila){
@@ -71,9 +71,9 @@ int main(){
     Fila Leste;
     FilaConstrutor(&Leste);
     
-    char input[4];
-    scanf("%3s", input);
-    char direcao[4];
+    char input[5];
+    scanf("%4s", input);
+    char direcao[5];
     while(strcmp(input, "0") != 0 ){
         if(input[0] != 'A'){
             strcpy(direcao,input);
@@ -94,18 +94,18 @@ int main(){
             }
         }
 
-        scanf("%3s", input);
+        scanf("%4s", input);
     }
  
     while(!isEmpty(&Oeste) || !isEmpty(&Sul) || !isEmpty(&Leste) || !isEmpty(&Norte)){
         if(!isEmpty(&Oeste)){
             remover(&Oeste);
         }
-        if(!isEmpty(&Sul)){
-            remover(&Sul);
-        }
         if(!isEmpty(&Norte)){
             remover(&Norte);
+        }
+        if(!isEmpty(&Sul)){
+            remover(&Sul);
         }
         if(!isEmpty(&Leste)){
             remover(&Leste);
