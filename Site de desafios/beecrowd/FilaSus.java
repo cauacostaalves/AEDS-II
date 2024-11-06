@@ -36,13 +36,12 @@ class FilaSus {
 
             int morreu = 0;
             int TempoAtual = 420; // 7 horas em minutos
-            int criticoPaciente = 0;
-            boolean sim = true;
             for(Paciente p: Pacientes){
 
                 int tmp = p.TempoEmMinutos()+p.critico;
                 if(tmp < TempoAtual){
                     morreu++;
+                    TempoAtual += 30;
                 }else{
                     if(TempoAtual > p.TempoEmMinutos()){
                         TempoAtual += 30;

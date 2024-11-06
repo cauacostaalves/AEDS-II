@@ -6,7 +6,7 @@ void swap(int array[], int i, int j){
     array[j] = temp;
 }
 
-int inserction_sort(int array[], int tam){
+int selection(int array[], int tam){
     int trocas = 0;
     for(int i=0; i<tam-1; i++){
         int menor = i;
@@ -39,7 +39,7 @@ int main(){
         scanf("%d",&tam);
         int array[tam];
         ler(array,tam);
-        int x = inserction_sort(array, tam);
+        int x = selection(array, tam);
         printf("%d\n",x);    
     }
     return 0;
