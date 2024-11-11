@@ -1,43 +1,45 @@
-
-
 class Lista{
     CelulaLista inicio;
-    CelulaLista FIm;
+    CelulaLista fim;
 }
 
 class CelulaLista{
-    CelulaLista topo;
+    CelulaPilha topo;
     CelulaLista prox;
-
-    CelulaLista maiorPilha(){
-        CelulaLista maior;
-        int acc =0;
-        int temp = 0;
-        for(CelulaLista i = inicio; i != null; i = i.prox ){
-            acc = 0;
-            for(CelulaPilha t = i.topo; t  != null; t = t.prox){
-               acc++;
-            }
-
-            if(temp > acc){
-                maior = i;
-                temp = acc;
-            }
-        }
-        return maior;
-    }
 }
 
 class CelulaPilha{
-    int elemento;
     CelulaPilha prox;
+    int elemento;
 }
 
+public int maior;
 
-class questao1{
-   
-    public static void main(String[] args) {
-        Lista newlista ;
+CelulaLista maiorPilha(){
+    return maiorPilha(inicio);
+}
+
+CelulaLista maiorPilha(CelulaLista i){
+    CelulaLista x = null;
+    if(i == null){
+        return x; // erro lista vazia 
+    }else{
+        for(CelulaLista tmp = i; tmp != null; i = i.prox){
+            int newtam = maiorPilha(tmp.topo);
+            if(newtam > maior){
+                maior = newtam;
+                x = i;
+            }
+        }
     }
-
+    return x;
 }
+
+int maiorPilha(CelulaPilha i){
+    int acc = 0;
+    for(CelulaPilha tmp = i; tmp != null; i = i.prox){
+        acc++;
+    }
+    return acc;
+}
+
