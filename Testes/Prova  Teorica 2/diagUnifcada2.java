@@ -18,9 +18,9 @@ class Matriz{
         return sentinela;
     }
 
-    void MontaLista(CelulaDupla i, Celula incio, Celula fim){
+    void MontaLista(CelulaDupla sentinela, Celula incio, Celula fim){
         for(Celula tmp = inicio; tmp != fim; tmp = tmp.prox){
-            inserirListaDupla(i, tmp.elemento);
+            inserirListaDupla(sentinela, tmp.elemento);
         }
     }
 
