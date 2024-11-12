@@ -31,9 +31,8 @@ class Matriz{
         tmp.prox.ant = tmp;
         tmp.ant = sentinela;
     }
+
 }
-
-
 
 class CelulaMatriz{
     CelulaMatriz esq, dis, inf , sup;
