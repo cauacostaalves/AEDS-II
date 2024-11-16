@@ -1,57 +1,73 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "ordemlistanoel",
+      "request": "launch",
+      "mainClass": "ordemlistanoel",
+      "projectName": "AEDS-II_5af1839"
+    },
+    {
+      "type": "java",
+      "name": "testeselecao",
+      "request": "launch",
+      "mainClass": "testeselecao",
+      "projectName": "AEDS II_51e04940"
+    },
+    {
+      "type": "java",
+      "name": "arq",
+      "request": "launch",
+      "mainClass": "arq",
+      "projectName": "AEDS II_51e04940"
+    },
+    {
+      "type": "java",
+      "name": "Arquivo",
+      "request": "launch",
+      "mainClass": "TPS.TP01Q08.Arquivo",
+      "projectName": "AEDS-II_643a5529"
+    },
+    {
+      "type": "java",
+      "name": "EscreverNumerosEmArquivo",
+      "request": "launch",
+      "mainClass": "TPS.TP01Q08.EscreverNumerosEmArquivo",
+      "projectName": "AEDS-II_643a5529"
+    },
+    {
+      "type": "java",
+      "name": "arquivo",
+      "request": "launch",
+      "mainClass": "TPS.TP01Q08.arquivo",
+      "projectName": "AEDS-II_643a5529"
+    },
+    {
+      "type": "java",
+      "name": "AlgebraBoleana",
+      "request": "launch",
+      "mainClass": "AlgebraBoleana",
+      "projectName": "AEDS II_51e04940"
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "c:/Users/1525320/Documents/GitHub/AEDS-II/TPS/TPS2/TP02Q10",
+      "program": "c:/Users/1525320/Documents/GitHub/AEDS-II/TPS/TPS2/TP02Q10/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
         {
-            "type": "java",
-            "name": "ordemlistanoel",
-            "request": "launch",
-            "mainClass": "ordemlistanoel",
-            "projectName": "AEDS-II_5af1839"
-        },
-        {
-            "type": "java",
-            "name": "testeselecao",
-            "request": "launch",
-            "mainClass": "testeselecao",
-            "projectName": "AEDS II_51e04940"
-        },
-        {
-            "type": "java",
-            "name": "arq",
-            "request": "launch",
-            "mainClass": "arq",
-            "projectName": "AEDS II_51e04940"
-        },
-        {
-            "type": "java",
-            "name": "Arquivo",
-            "request": "launch",
-            "mainClass": "TPS.TP01Q08.Arquivo",
-            "projectName": "AEDS-II_643a5529"
-        },
-        {
-            "type": "java",
-            "name": "EscreverNumerosEmArquivo",
-            "request": "launch",
-            "mainClass": "TPS.TP01Q08.EscreverNumerosEmArquivo",
-            "projectName": "AEDS-II_643a5529"
-        },
-        {
-            "type": "java",
-            "name": "arquivo",
-            "request": "launch",
-            "mainClass": "TPS.TP01Q08.arquivo",
-            "projectName": "AEDS-II_643a5529"
-        },
-        {
-            "type": "java",
-            "name": "AlgebraBoleana",
-            "request": "launch",
-            "mainClass": "AlgebraBoleana",
-            "projectName": "AEDS II_51e04940"
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
         }
-    ]
+      ]
+    }
+  ]
 }
